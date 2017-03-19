@@ -1,0 +1,9 @@
+#unneeded extras from class
+A1-S1-2017-8-Puzzle-INSTRUCTIONS.doc
+Tips_for_Assign_1_2017.pptx
+
+#.exe
+*.exe
+
+#.o files
+*.o
