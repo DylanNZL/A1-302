@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
 //  8-PUZZLE PROBLEM
-//  
+//
 //  Start-up codes by n.h.reyes@massey.ac.nz
 //
 //  Name(s):
@@ -42,11 +42,11 @@ const int WIDTH  = 400; /**< Width of board for rendering in pixels. */
 
 //////////////////////////////////////////////////////
 // Function prototypes
-void displayBoard(string const elements); 
+void displayBoard(string const elements);
 void AnimateSolution(string const initialState, string const goalState, string path);
 
-////////////////////////////////////////////////////// 
- 
+//////////////////////////////////////////////////////
+
 void update(int **board) {
     /* Setting up the graphics. */
     static bool setup = false;
@@ -116,31 +116,25 @@ void update(int **board) {
         }
         y += 13 * HEIGHT / 40;
     }
-
     /* Set the page to display. */
     setvisualpage(visual);
     visual = !visual;
-
     delay(100);
 }
 
 
 void displayBoard(string const elements) {
     /* Setting up the graphics. */
-    
     int board[3][3];
-        
     int n=0;
-    
-    for(int i=0; i < 3;i++){
-	    for(int j=0; j < 3;j++){
-		    
-		    board[i][j] = elements.at(n) - '0';	    
-		    n++;		    
-		 }   
+    for(int i=0; i < 3;i++) {
+	    for(int j=0; j < 3;j++) {
+		    board[i][j] = elements.at(n) - '0';
+		    n++;
+		 }
 	 }
-    
-    
+
+
     static bool setup = false;
 
     if(!setup) {
@@ -148,13 +142,13 @@ void displayBoard(string const elements) {
         int graphMode = 0;
         initgraph(&graphDriver, &graphMode, "", WIDTH, HEIGHT);
         setup = true;
-        
+
         settextstyle(TRIPLEX_FONT, HORIZ_DIR, 3);
         settextjustify(CENTER_TEXT, CENTER_TEXT);
         outtextxy(getmaxx()/2,getmaxy()/2,"press any key to start.");
         cout << endl << endl << "press any key to start." << endl << endl;
         getch();
-        
+
     }
 
     /* Variables for the function. */
@@ -208,7 +202,7 @@ void displayBoard(string const elements) {
                 /* Even though this is also not necessary here the protected
                    version of "sprintf" is used in this case. It should ALWAYS
                    be used to prevent boundary overwrites! */
-//                outtextxy(x, y, (char *)elements[i+j*3]);   
+//                outtextxy(x, y, (char *)elements[i+j*3]);
                 outtextxy(x, y, outputString);
                 moveto(0, 0);
             }
@@ -216,21 +210,16 @@ void displayBoard(string const elements) {
         }
         y += 13 * HEIGHT / 40;
     }
-
     /* Set the page to display. */
     setvisualpage(visual);
     visual = !visual;
-
     delay(100);
 }
 
 
 
 void AnimateSolution(string const initialState, string const goalState, string path){
-
 	int step=1;
-   
-	
 	cout << endl << "--------------------------------------------------------------------" << endl;
 	if (path==""){
 		 cout << endl << "Nothing to animate." << endl;
@@ -238,46 +227,33 @@ void AnimateSolution(string const initialState, string const goalState, string p
 	    cout << endl << "Animating solution..." << endl;
 	    cout << "Plan of action = " << path << endl;
 	}
-	
 	Puzzle *p = new Puzzle(initialState, goalState);
-    Puzzle *nextState;
-	
+  Puzzle *nextState;
 	string strState;
-		
 	strState = p->toString();
-    displayBoard(strState);
-	
+  displayBoard(strState);
 	cout << "--------------------------------------------------------------------" << endl;
-	      
 	for(int i=0; i < path.length(); i++){
-		
 	   cout << endl << "Step #" << step << ")  ";
-	   switch(path[i]){
-			
-			case 'U': nextState = p->moveUp(); cout << "[UP]" << endl;
-			          break;
-			case 'D': nextState = p->moveDown(); cout << "[DOWN]" << endl;
-			          break;
-			case 'L': nextState = p->moveLeft(); cout << "[LEFT]" << endl;
-			          break;
-            case 'R': nextState = p->moveRight(); cout << "[RIGHT]" << endl;
-			          break;
+	   switch(path[i]) {
+  			case 'U': nextState = p->moveUp(); cout << "[UP]" << endl;
+  			          break;
+  			case 'D': nextState = p->moveDown(); cout << "[DOWN]" << endl;
+  			          break;
+  			case 'L': nextState = p->moveLeft(); cout << "[LEFT]" << endl;
+  			          break;
+        case 'R': nextState = p->moveRight(); cout << "[RIGHT]" << endl;
+  			          break;
  	  }
  	  strState = nextState->toString();
-		
 	  delete p;
 	  p = nextState;
-		
-      displayBoard(strState);
-      
-      step++;
+    displayBoard(strState);
+    step++;
 	}
-	
-	delete p; //clear memory	
+	delete p; //clear memory
 	cout << endl << "Animation done." << endl;
 	cout << "--------------------------------------------------------------------" << endl;
-	
-
 }
 
 
@@ -287,7 +263,7 @@ void AnimateSolution(string const initialState, string const goalState, string p
  */
 
 int main( int argc, char* argv[] ){
-   
+
    string path;
 
    //~ cout << "=========<< SEARCH ALGORITHMS >>=========" << endl;
@@ -295,133 +271,95 @@ int main( int argc, char* argv[] ){
 		cout << "SYNTAX: main.exe <TYPE_OF_RUN = \"batch_run\" or \"single_run\"> ALGORITHM_NAME \"INITIAL STATE\" \"GOAL STATE\" " << endl;
 		exit(0);
 	}
-    
-   //for testing only 
+   //for testing only
    //~ cout << "Parameters supplied" << endl;
    //~ for(int i=1; i < argc; i++){
-		
+
 		//~ cout << setw(2) << i << ") " << argv[i] << endl;
-		
+
    //~ }
-	
 	string typeOfRun(argv[1]);
 	string algorithmSelected(argv[2]);
 	string initialState(argv[3]);
 	string goalState(argv[4]);
-	
-    std::transform(typeOfRun.begin(), typeOfRun.end(), typeOfRun.begin(), ::tolower);
-    std::transform(algorithmSelected.begin(), algorithmSelected.end(), algorithmSelected.begin(), ::tolower);
-    
+
+  std::transform(typeOfRun.begin(), typeOfRun.end(), typeOfRun.begin(), ::tolower);
+  std::transform(algorithmSelected.begin(), algorithmSelected.end(), algorithmSelected.begin(), ::tolower);
 
 	int pathLength=0;
 	int depth=0;
-    int numOfStateExpansions=0;	
+  int numOfStateExpansions=0;
 	int maxQLength=0;
-    int numOfDeletionsFromMiddleOfHeap=0;
-    int numOfLocalLoopsAvoided=0;
-    int numOfAttemptedNodeReExpansions=0;
-
-	float actualRunningTime=0.0;	
+  int numOfDeletionsFromMiddleOfHeap=0;
+  int numOfLocalLoopsAvoided=0;
+  int numOfAttemptedNodeReExpansions=0;
+	float actualRunningTime=0.0;
 	//=========================================================================================================
-
     // cout << "typeOfRun = " << typeOfRun << endl;
     // cout << "algorithmSelected = " << algorithmSelected << endl;
-	
 try{
-
 	if(typeOfRun == "single_run") cout << endl << "============================================<< EXPERIMENT RESULTS >>============================================" << endl;
-	
 	//=========================================================================================================
 	//Run algorithm
-
     if(algorithmSelected == "breadth_first_search" ){
-        
         path = breadthFirstSearch(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime);
-
     } else if(algorithmSelected == "breadth_first_search_vlist" ){
-        
-        path = breadthFirstSearch_with_VisitedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime);    
-                          
-
-    } else if(algorithmSelected == "pds_no_vlist" ){			
-		
-		path = progressiveDeepeningSearch_No_VisitedList(initialState,  goalState, numOfStateExpansions, maxQLength, actualRunningTime, 5000);		
-
+        path = breadthFirstSearch_with_VisitedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime);
+    } else if(algorithmSelected == "pds_no_vlist" ){
+		    path = progressiveDeepeningSearch_No_VisitedList(initialState,  goalState, numOfStateExpansions, maxQLength, actualRunningTime, 5000);
     } else if(algorithmSelected == "pds_nonstrict_vlist" ){
         path = progressiveDeepeningSearch_with_NonStrict_VisitedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime,5000);
-    	
-	
-    }  else if(algorithmSelected == "astar_explist_misplacedtiles" ){       
-        
-        path = aStar_ExpandedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime, numOfDeletionsFromMiddleOfHeap,numOfLocalLoopsAvoided ,numOfAttemptedNodeReExpansions, misplacedTiles);     
-
-    }  else if(algorithmSelected == "astar_explist_manhattan" ){       
-        
-        path = aStar_ExpandedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime, numOfDeletionsFromMiddleOfHeap,numOfLocalLoopsAvoided ,numOfAttemptedNodeReExpansions, manhattanDistance); 
-        
+    }  else if(algorithmSelected == "astar_explist_misplacedtiles" ){
+        path = aStar_ExpandedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime, numOfDeletionsFromMiddleOfHeap,numOfLocalLoopsAvoided ,numOfAttemptedNodeReExpansions, misplacedTiles);
+    }  else if(algorithmSelected == "astar_explist_manhattan" ){
+        path = aStar_ExpandedList(initialState, goalState, numOfStateExpansions, maxQLength, actualRunningTime, numOfDeletionsFromMiddleOfHeap,numOfLocalLoopsAvoided ,numOfAttemptedNodeReExpansions, manhattanDistance);
     }
 //-----------------------------------------------------------------------------
-		
 	pathLength = path.size();
-		
-	//Run algorithm    
+	//Run algorithm
     if(algorithmSelected == "breadth_first_search" ){
-        cout << setw(31) << std::left << "1) breadth_first_search";                    
-
+        cout << setw(31) << std::left << "1) breadth_first_search";
     } else if(algorithmSelected == "breadth_first_search_vlist" ){
-        cout << setw(31) << std::left << "2) breadth_first_search_vlist";             
-    
+        cout << setw(31) << std::left << "2) breadth_first_search_vlist";
     } else if(algorithmSelected == "pds_no_vlist" ){
-        cout << setw(31) << std::left << "3) pds_no_vlist";                  
-     
+        cout << setw(31) << std::left << "3) pds_no_vlist";
     } else if(algorithmSelected == "pds_nonstrict_vlist" ){
-        cout << setw(31) << std::left << "4) pds_nonstrict_vlist";              
-    
+        cout << setw(31) << std::left << "4) pds_nonstrict_vlist";
     }  else if(algorithmSelected == "astar_explist_misplacedtiles" ){
-        cout << setw(31) << std::left << "5) astar_explist_misplacedtiles";         
-        
+        cout << setw(31) << std::left << "5) astar_explist_misplacedtiles";
     }  else if(algorithmSelected == "astar_explist_manhattan" ){
-        cout << setw(31) << std::left << "6) astar_explist_manhattan";  
-    }      
-
+        cout << setw(31) << std::left << "6) astar_explist_manhattan";
+    }
 }
 
 catch(exception &e){
     cout << "Standard exception: " << e.what() << endl;
 }
 
-    if(pathLength == 0) cout << "\n\n*---- NO SOLUTION found. (Q is empty!) ----*" << endl;    
-
-	if(typeOfRun == "batch_run"){	
-		
-		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' << setw(10) << pathLength; 
-		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(10) << numOfStateExpansions; 
-		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(19) << maxQLength; 
-		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << actualRunningTime; 
-        cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << numOfDeletionsFromMiddleOfHeap; 
-        cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << numOfAttemptedNodeReExpansions << endl; 
-
-
-	} else if(typeOfRun == "single_run"){	
+  if(pathLength == 0) cout << "\n\n*---- NO SOLUTION found. (Q is empty!) ----*" << endl;
+	if(typeOfRun == "batch_run"){
+		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' << setw(10) << pathLength;
+		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(10) << numOfStateExpansions;
+		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(19) << maxQLength;
+		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << actualRunningTime;
+    cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << numOfDeletionsFromMiddleOfHeap;
+    cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(15) << numOfAttemptedNodeReExpansions << endl;
+	} else if(typeOfRun == "single_run"){
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << endl << endl << "Initial State:" << std::fixed << ' ' << setw(12) << initialState << endl;
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Goal State:" << std::fixed << ' ' << setw(12) << goalState << endl;
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << endl <<  "Path Length:" << std::fixed << ' ' << setw(12) << pathLength << endl;
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Num Of State Expansions:" << std::fixed << ' ' << setw(12) <<  numOfStateExpansions << endl;
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Max Q Length:" << std::fixed << ' ' << setw(12) << maxQLength << endl;
 		cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Actual Running Time:" << std::fixed << ' ' << setprecision(6) << setw(12) <<  actualRunningTime << endl;
+    cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Num of Deletions from MiddleOfHeap:" << std::fixed << ' ' << setprecision(6) << setw(12) <<  numOfDeletionsFromMiddleOfHeap << endl;
+    cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Num of Attempted Node ReExpansions:" << std::fixed << ' ' << setprecision(6) << setw(12) <<  numOfAttemptedNodeReExpansions << endl;
 
-        cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Num of Deletions from MiddleOfHeap:" << std::fixed << ' ' << setprecision(6) << setw(12) <<  numOfDeletionsFromMiddleOfHeap << endl;        
-        cout << setprecision(6) << setw(25) << std::setfill(' ') <<  std::right << "Num of Attempted Node ReExpansions:" << std::fixed << ' ' << setprecision(6) << setw(12) <<  numOfAttemptedNodeReExpansions << endl;
+		cout << "================================================================================================================" << endl << endl;
 
-
-		cout << "================================================================================================================" << endl << endl;	
-		
 		if(path != "") {
 			 AnimateSolution(initialState, goalState, path);
 		}
 	}
-
     /* Show that we have exited without an error. */
     return 0;
 }
-
