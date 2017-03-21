@@ -8,6 +8,7 @@ using namespace std;
  */
 
 // Queue Definitions
+// TODO: Dylan
 
 Queue::Queue() {
   count = -1;  max = -1;
@@ -39,19 +40,19 @@ void Queue::addToBack(string data) {
   rear = temp;
 }
 
-void Queue::leave() {
+// Delete the first value in the queue and return it
+string Queue::leave() {
   Node * temp;
-  if (front == NULL) { return; }
+  if (front == NULL) { return "0"; }
   temp = front;
   front = front->next;
   if (front == NULL) { rear = NULL; }
+
+  string deleted = temp->data;
   delete temp;
   count--;
-}
 
-string Queue::getFront() {
-  if (front != NULL) { return front->data; }
-  return "0";
+  return deleted;
 }
 
 bool Queue::isEmpty() {
@@ -187,16 +188,11 @@ string breadthFirstSearch(string const initialState, string const goalState, int
     Q.addToBack(initialState);
     // While queue is not empty search for goal state
     while (!Q.isEmpty()) {
-      if (Q.getFront() == goalState) {
+      temp = Q.leave();
+      if (temp == goalState) {
         break;
       }
-      else {
-        temp = Q.getFront();
-        if (temp == goalState) {
-          break;
-        }
-        // add temps children to Q
-      }
+      // add temps children to Q
     }
 
 //***********************************************************************************************************
@@ -231,7 +227,7 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
     Q.addToBack(initialState);
 
     while (!Q.isEmpty()) {
-      temp = Q.getFront();
+      temp = Q.leave();
       if (temp == goalState) {
         break;
       }

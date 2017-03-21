@@ -29,8 +29,7 @@ public:
   ~Queue();
   void addToFront(string data);
   void addToBack(string data);
-  void leave();
-  string getFront();
+  string leave();
   bool isEmpty();
   int getCount();
   int getMax();
