@@ -2,6 +2,23 @@
 
 using namespace std;
 
+
+/**
+ * 6 & 1 might not work
+ */
+
+// TODO Dylan
+// Queue class
+// Add to front(PDS) & back(breadth)
+// Take from front
+
+// TODO: Dylan
+// Heap class
+// A*
+
+// TODO: Alex
+// Hash function
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 // Search Algorithm:  Breadth-First Search
@@ -24,8 +41,7 @@ string breadthFirstSearch(string const initialState, string const goalState, int
 	  clock_t startTime;
     //add necessary variables here
 
-    // QUEUE for Q
-    // Visited list ?? Vector?
+    // Q
 
     //algorithm implementation
 	  // cout << "------------------------------" << endl;
@@ -45,13 +61,17 @@ string breadthFirstSearch(string const initialState, string const goalState, int
 // Search Algorithm:  Breadth-First Search with VisitedList
 //
 // Move Generator:
+/**
+ *
+ */
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 string breadthFirstSearch_with_VisitedList(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime) {
     string path;
 	  clock_t startTime;
     //add necessary variables here
-
+    // Q
+    // visited list
     //algorithm implementation
 	  // cout << "------------------------------" << endl;
     //    cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
@@ -75,7 +95,8 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     string path;
 	  clock_t startTime;
     //add necessary variables here
-
+    // Q
+    // Depth
     //algorithm implementation
 	  // cout << "------------------------------" << endl;
     //    cout << "<<progressiveDeepeningSearch_No_VisitedList>>" << endl;
@@ -99,7 +120,9 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
     string path;
 	  clock_t startTime;
     //add necessary variables here
-
+    // Q
+    // visited list with depths assosiated
+    // depth
     //algorithm implementation
 	  // cout << "------------------------------" << endl;
     //    cout << "<<progressiveDeepeningSearch_with_NonStrict_VisitedList>>" << endl;

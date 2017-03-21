@@ -327,8 +327,8 @@ catch(exception &e){
     cout << "Standard exception: " << e.what() << endl;
 }
 
-  if(pathLength == 0) cout << "\n\n*---- NO SOLUTION found. (Q is empty!) ----*" << endl;
-	if(typeOfRun == "batch_run"){
+  if (pathLength == 0) cout << "\n\n*---- NO SOLUTION found. (Q is empty!) ----*" << endl;
+	if (typeOfRun == "batch_run") {
 		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' << setw(10) << pathLength;
 		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(10) << numOfStateExpansions;
 		cout  << setprecision(6) << std::setfill(' ')   << std::fixed << std::right << ' ' <<  setw(19) << maxQLength;
