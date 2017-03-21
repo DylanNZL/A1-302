@@ -11,6 +11,8 @@
 
 #include "puzzle.h"
 
+<<<<<<< HEAD
+=======
 struct Node {
   Node() {}
   Node(string mData) : data(mData), next(NULL), prev(NULL) {}
@@ -51,6 +53,7 @@ public:
   int getMax() { return max; }
 };
 
+>>>>>>> origin/master
 string hash(string toHash);
 
 const heuristicFunction HEURISTIC_FUNCTION=manhattanDistance;
