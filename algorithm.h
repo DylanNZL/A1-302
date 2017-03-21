@@ -11,6 +11,50 @@
 
 #include "puzzle.h"
 
+<<<<<<< HEAD
+=======
+struct Node {
+  Node() {}
+  Node(string mData) : data(mData), next(NULL), prev(NULL) {}
+  Node(string mData, Node *mNext, Node *mPrev) : data(mData), next(mNext), prev(mPrev) {}
+  string data;
+  Node *next, *prev;
+};
+
+// TODO Dylan
+class Queue {
+private:
+  Node *front, *rear;
+  int count, max;
+public:
+  Queue();
+  ~Queue();
+  void addToFront(string data);
+  void addToBack(string data);
+  void leave();
+  string getFront();
+  bool isEmpty();
+  int getCount();
+  int getMax();
+};
+
+// TODO: Dylan
+// Heap class
+// A*
+class Heap {
+private:
+  vector<string> data;
+  int last, max;
+public:
+  Heap();
+  ~Heap();
+  void insertIntoHeap(string mData);
+  string deleteFromHeap();
+  bool heapCompare(string one, string two);
+  int getMax() { return max; }
+};
+
+>>>>>>> origin/master
 string hash(string toHash);
 
 const heuristicFunction HEURISTIC_FUNCTION=manhattanDistance;

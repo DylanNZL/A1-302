@@ -7,6 +7,7 @@ using namespace std;
  * 6 & 1 might not work
  */
 
+<<<<<<< HEAD
 struct Node {
   Node() {}
   Node(string mData) : data(mData), next(NULL), prev(NULL) {}
@@ -35,6 +36,19 @@ public:
   int getMax() { return max; }
 };
 
+=======
+// Queue Definitions
+
+Queue::Queue() {
+  count = -1;  max = -1;
+  front = NULL; rear = NULL;
+}
+
+Queue::~Queue(){
+}
+
+// Used for PDS
+>>>>>>> origin/master
 void Queue::addToFront(string data) {
   Node *temp = new Node(data);
   if (rear == NULL) { rear = temp; }
@@ -45,6 +59,10 @@ void Queue::addToFront(string data) {
   front = temp;
 }
 
+<<<<<<< HEAD
+=======
+// Used for Breadth-First
+>>>>>>> origin/master
 void Queue::addToBack(string data) {
   Node *temp = new Node(data);
   if (front == NULL) { front = temp; }
@@ -77,6 +95,7 @@ bool Queue::isEmpty() {
   return false;
 }
 
+<<<<<<< HEAD
 // TODO: Dylan
 // Heap class
 // A*
@@ -170,6 +189,96 @@ string Heap::deleteFromHeap() {
 bool Heap::heapCompare(string one, string two) {
   return true;
 }
+=======
+int Queue::getCount() { return count; }
+
+int Queue::getMax() { return max; }
+
+// Heap Definitions
+Heap::Heap() {
+  last = -1;
+  max = -1;
+}
+
+Heap::~Heap() {
+}
+
+void Heap::insertIntoHeap(string mData) {
+   last++;
+   // What to do with count & max?
+   data.at(last) = mData;
+   // First value in vector
+   if (last == 0) { return; }
+   int swappingIndex = last, parentIndex;
+   string temp;
+   bool swapping = true;
+   while (swapping) {
+     swapping = false;
+     // Find which side it is
+     if (swappingIndex % 2 == 0) {
+       parentIndex = (swappingIndex / 2) - 1; // right
+     } else {
+       parentIndex = (swappingIndex / 2); // left
+     }
+     // do the swap if needed
+     if (parentIndex >= 0) {
+       // Check if the swappingIndex should be higher in the tree
+       if (heapCompare(data.at(parentIndex), data.at(swappingIndex))) {
+         temp = data[swappingIndex];
+         data.at(swappingIndex) = data.at(parentIndex);
+         data.at(parentIndex) = temp;
+         swapping = true;
+         swappingIndex = parentIndex;
+       }
+     }
+   }
+}
+
+string Heap::deleteFromHeap() {
+   if (last == 0) { last--; return data.at(0); }
+
+   // Save deleted root and move the last value in tree to the root
+   string deleted = data.at(0);
+   data.at(0) = data.at(last);
+   data.at(last) = "0"; last--;
+
+   // Resort tree
+   int leftIndex, rightIndex, parentIndex = 0;
+   string temp;
+   bool swapping = true;
+   while (swapping) {
+     swapping = false;
+     leftIndex = (parentIndex * 2) + 1;
+     rightIndex = (parentIndex * 2) + 2;
+
+     temp = data.at(parentIndex);
+
+     // Check if left or right is bigger than parent
+     if (heapCompare(data.at(parentIndex), data.at(leftIndex)) || heapCompare(data.at(parentIndex), data.at(rightIndex))) {
+       swapping = true;
+       // right is bigger
+       if (heapCompare(data.at(leftIndex), data.at(rightIndex))) {
+         data.at(parentIndex) = data.at(rightIndex);
+         data.at(rightIndex) = temp;
+         parentIndex = rightIndex;
+       }
+       //  left is bigger
+       else {
+         data.at(parentIndex) = data.at(leftIndex);
+         data.at(leftIndex) = temp;
+         parentIndex = leftIndex;
+       }
+     }
+   }
+}
+
+ // Comapare two strings and return true if two should be higher in the tree than one
+ // TODO: Dylan
+ bool Heap::heapCompare(string one, string two) {
+   return true;
+ }
+
+>>>>>>> origin/master
  // TODO: Alex
  // Hash function
  string hash(string toHash) {
