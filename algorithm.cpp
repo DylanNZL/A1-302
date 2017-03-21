@@ -284,7 +284,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
 	  return path;
 }
 
-
+//TODO: Alex
 string aStar_ExpandedList(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength,
                                float &actualRunningTime, int &numOfDeletionsFromMiddleOfHeap, int &numOfLocalLoopsAvoided, int &numOfAttemptedNodeReExpansions, heuristicFunction heuristic){
 		string path;
