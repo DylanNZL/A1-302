@@ -83,6 +83,7 @@ public:
   ~Heap() {}
   void insertIntoHeap(string mData);
   string deleteFromHeap();
+  bool heapCompare(string one, string two);
   int getMax() { return max; }
 };
 
@@ -105,13 +106,60 @@ void Heap::insertIntoHeap(string mData) {
     }
     // do the swap if needed
     if (parentIndex >= 0) {
-      // Check if the 
+      // Check if the swappingIndex should be higher in the tree
+      if (heapCompare(data.at(parentIndex), data.at(swappingIndex))) {
+        temp = data[swappingIndex];
+        data.at(swappingIndex) = data.at(parentIndex);
+        data.at(parentIndex) = temp;
+        swapping = true;
+        swappingIndex = parentIndex;
+      }
     }
   }
 }
 
 string Heap::deleteFromHeap() {
+  if (last == 0) { last--; return data.at(0); }
 
+  // Save deleted root and move the last value in tree to the root
+  string deleted = data.at(0);
+  data.at(0) = data.at(last);
+  data.at(last) = "0"; last--;
+
+  // Resort tree
+  int leftIndex, rightIndex, parentIndex = 0;
+  string temp;
+  bool swapping = true;
+  while (swapping) {
+    swapping = false;
+    leftIndex = (parentIndex * 2) + 1;
+    rightIndex = (parentIndex * 2) + 2;
+
+    temp = data.at(parentIndex);
+
+    // Check if left or right is bigger than parent
+    if (heapCompare(data.at(parentIndex), data.at(leftIndex)) || heapCompare(data.at(parentIndex), data.at(rightIndex))) {
+      swapping = true;
+      // right is bigger
+      if (heapCompare(data.at(leftIndex), data.at(rightIndex))) {
+        data.at(parentIndex) = data.at(rightIndex);
+        data.at(rightIndex) = temp;
+        parentIndex = rightIndex;
+      }
+      //  left is bigger
+      else {
+        data.at(parentIndex) = data.at(leftIndex);
+        data.at(leftIndex) = temp;
+        parentIndex = leftIndex;
+      }
+    }
+  }
+}
+
+// Comapare two strings and return true if two should be higher in the tree than one
+// TODO: Dylan
+bool Heap::heapCompare(string one, string two) {
+  return true;
 }
 
 // TODO: Alex
