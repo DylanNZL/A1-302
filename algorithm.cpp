@@ -1,23 +1,124 @@
 #include "algorithm.h"
+#include <vector>
 
 using namespace std;
-
 
 /**
  * 6 & 1 might not work
  */
+struct Node {
+  Node() {}
+  Node(string mData) : data(mData), next(NULL), prev(NULL) {}
+  Node(string mData, Node *mNext, Node *mPrev) : data(mData), next(mNext), prev(mPrev) {}
+  string data;
+  Node *next, *prev;
+};
 
 // TODO Dylan
 // Queue class
 // Add to front(PDS) & back(breadth)
 // Take from front
+class Queue {
+private:
+  Node *front, *rear;
+  int count, max;
+public:
+  Queue();
+  ~Queue();
+  void addToFront(string data);
+  void addToBack(string data);
+  void leave();
+  string getFront();
+  int getCount() { return count; }
+  int getMax() { return max; }
+};
+
+void Queue::addToFront(string data) {
+  Node *temp = new Node(data);
+  if (rear == NULL) { rear = temp; }
+  if (front != NULL) {
+    temp->next = front;
+    front->prev = temp;
+  }
+  front = temp;
+}
+
+void Queue::addToBack(string data) {
+  Node *temp = new Node(data);
+  if (front == NULL) { front = temp; }
+  if (rear != NULL) {
+    rear->next = temp;
+    temp->prev = rear;
+  }
+  rear = temp;
+}
+
+void Queue::leave() {
+  Node * temp;
+  if (front == NULL) { return; }
+  temp = front;
+  front = front->next;
+  if (front == NULL) { rear = NULL; }
+  delete temp;
+  count--;
+}
+
+string Queue::getFront() {
+  if (front != NULL) { return front->data; }
+  return "0";
+}
 
 // TODO: Dylan
 // Heap class
 // A*
+class Heap {
+private:
+  vector<string> data;
+  int last, max;
+public:
+  Heap() {
+    last = -1;
+    max = -1;
+  }
+  ~Heap() {}
+  void insertIntoHeap(string mData);
+  string deleteFromHeap();
+  int getMax() { return max; }
+};
+
+void Heap::insertIntoHeap(string mData) {
+  last++;
+  // What to do with count & max?
+  data.at(last) = mData;
+  // First value in vector
+  if (last == 0) { return; }
+  int swappingIndex = last, parentIndex;
+  string temp;
+  bool swapping = true;
+  while (swapping) {
+    swapping = false;
+    // Find which side it is
+    if (swappingIndex % 2 == 0) {
+      parentIndex = (swappingIndex / 2) - 1; // right
+    } else {
+      parentIndex = (swappingIndex / 2); // left
+    }
+    // do the swap if needed
+    if (parentIndex >= 0) {
+      // Check if the 
+    }
+  }
+}
+
+string Heap::deleteFromHeap() {
+
+}
 
 // TODO: Alex
 // Hash function
+string hash(string toHash) {
+  return toHash;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
