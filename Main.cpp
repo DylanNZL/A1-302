@@ -39,7 +39,6 @@ const int WIDTH  = 400; /**< Width of board for rendering in pixels. */
  *              0 indicates an empty space.
  */
 
-
 //////////////////////////////////////////////////////
 // Function prototypes
 void displayBoard(string const elements);
@@ -121,7 +120,6 @@ void update(int **board) {
     visual = !visual;
     delay(100);
 }
-
 
 void displayBoard(string const elements) {
     /* Setting up the graphics. */
@@ -216,8 +214,6 @@ void displayBoard(string const elements) {
     delay(100);
 }
 
-
-
 void AnimateSolution(string const initialState, string const goalState, string path){
 	int step=1;
 	cout << endl << "--------------------------------------------------------------------" << endl;
@@ -256,14 +252,10 @@ void AnimateSolution(string const initialState, string const goalState, string p
 	cout << "--------------------------------------------------------------------" << endl;
 }
 
-
-
 /**
  * Main function to kick off the game.
  */
-
 int main( int argc, char* argv[] ){
-
    string path;
 
    //~ cout << "=========<< SEARCH ALGORITHMS >>=========" << endl;
@@ -271,13 +263,12 @@ int main( int argc, char* argv[] ){
 		cout << "SYNTAX: main.exe <TYPE_OF_RUN = \"batch_run\" or \"single_run\"> ALGORITHM_NAME \"INITIAL STATE\" \"GOAL STATE\" " << endl;
 		exit(0);
 	}
-   //for testing only
-   //~ cout << "Parameters supplied" << endl;
-   //~ for(int i=1; i < argc; i++){
+  // for testing only
+  cout << "Parameters supplied" << endl;
+  for(int i=1; i < argc; i++) {
+		   cout << setw(2) << i << ") " << argv[i] << endl;
+  }
 
-		//~ cout << setw(2) << i << ") " << argv[i] << endl;
-
-   //~ }
 	string typeOfRun(argv[1]);
 	string algorithmSelected(argv[2]);
 	string initialState(argv[3]);
