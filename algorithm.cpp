@@ -1,5 +1,6 @@
 #include "algorithm.h"
-#include <vector>
+#include <algorithm> // check if vector contains a state
+#include <vector> // for visited list
 
 using namespace std;
 
@@ -213,10 +214,7 @@ string breadthFirstSearch(string const initialState, string const goalState, int
       if (temp == goalState) {
         break;
       }
-      // If 0 can move left (x12x45x67)
-      // If 0 can move Up (xxx345678)
-      // If 0 can move right (01x34x67x)
-      // If 0 can move down (012345xxx)
+
       string right = "0", up = "0", left = "0", down = "0";
       if (temp[0] == '0') {
         right = moveRight(temp, 0);
@@ -312,7 +310,69 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
       if (temp == goalState) {
         break;
       }
-      // add temps children to Q if their states aren't in the visited list, add each child state to visited list
+
+      string right = "0", up = "0", left = "0", down = "0";
+      if (temp[0] == '0') {
+        right = moveRight(temp, 0);
+        down = moveDown(temp, 0);
+      }
+      else if (temp[1] == '0') {
+        left = moveLeft(temp, 1);
+        right = moveRight(temp, 1);
+        down = moveDown(temp, 1);
+      }
+      else if (temp[2] == '0') {
+        left = moveLeft(temp, 2);
+        down = moveDown(temp, 2);
+      }
+      else if (temp[3] == '0') {
+        up = moveUp(temp, 3);
+        right = moveRight(temp, 3);
+        down = moveDown(temp, 3);
+      }
+      else if (temp[4] == '0') {
+        left = moveLeft(temp, 4);
+        up = moveUp(temp, 4);
+        right = moveRight(temp, 4);
+        down = moveDown(temp, 4);
+      }
+      else if (temp[5] == '0') {
+        left = moveLeft(temp, 5);
+        up = moveUp(temp, 5);
+        down = moveDown(temp, 5);
+      }
+      else if (temp[6] == '0') {
+        up = moveUp(temp, 6);
+        right = moveRight(temp, 6);
+      }
+      else if (temp[7] == '0') {
+        left = moveLeft(temp, 7);
+        up = moveUp(temp, 7);
+        right = moveRight(temp, 7);
+      }
+      else if (temp[8] == '0') {
+        left = moveLeft(temp, 8);
+        up = moveUp(temp, 8);
+      }
+
+      // Check if the state is in visited, if not add it to Q and visited
+      //
+      if ((left != "0") && !(find(visited.begin(), visited.end(), left) != visited.end())) {
+        Q.addToBack(left);
+        visited.push_back(left);
+      }
+      if ((up != "0") && !(find(visited.begin(), visited.end(), up) != visited.end())) {
+        Q.addToBack(up);
+        visited.push_back(up);
+      }
+      if ((right != "0") && !(find(visited.begin(), visited.end(), right) != visited.end())) {
+        Q.addToBack(right);
+        visited.push_back(right);
+      }
+      if ((down != "0") && !(find(visited.begin(), visited.end(), down) != visited.end())) {
+        Q.addToBack(down);
+        visited.push_back(down);
+      }
     }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
