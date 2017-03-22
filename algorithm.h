@@ -12,8 +12,8 @@
 #include "puzzle.h"
 
 struct Node {
-  Node(string mData) : data(mData), next(NULL), prev(NULL) {}
-  string data;
+  Node(Puzzle mData) : data(mData), next(NULL), prev(NULL) {}
+  Puzzle data;
   Node *next, *prev;
 };
 
@@ -25,9 +25,9 @@ private:
 public:
   Queue();
   ~Queue();
-  void addToFront(string data);
-  void addToBack(string data);
-  string leave();
+  void addToFront(Puzzle data);
+  void addToBack(Puzzle data);
+  Puzzle leave();
   bool isEmpty();
   int getCount();
   int getMax();
@@ -38,22 +38,18 @@ public:
 // A*
 class Heap {
 private:
-  vector<string> data;
+  vector<Puzzle> data;
   int last, max;
 public:
   Heap();
   ~Heap();
-  void insertIntoHeap(string mData);
-  string deleteFromHeap();
-  bool heapCompare(string one, string two);
+  void insertIntoHeap(Puzzle mData);
+  Puzzle deleteFromHeap();
+  bool heapCompare(Puzzle one, Puzzle two);
   int getMax() { return max; }
 };
 
 string hash(string toHash);
-string moveLeft(string temp, int pos);
-string moveUp(string temp, int pos);
-string moveRight(string temp, int pos);
-string moveDown(string temp, int pos);
 
 const heuristicFunction HEURISTIC_FUNCTION=manhattanDistance;
 
