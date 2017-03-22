@@ -6,37 +6,6 @@ using namespace std;
 /**
  * 6 & 1 might not work
  */
-
-<<<<<<< HEAD
-struct Node {
-  Node() {}
-  Node(string mData) : data(mData), next(NULL), prev(NULL) {}
-  Node(string mData, Node *mNext, Node *mPrev) : data(mData), next(mNext), prev(mPrev) {}
-  string data;
-  Node *next, *prev;
-};
-
-// TODO Dylan
-// Queue class
-// Add to front(PDS) & back(breadth)
-// Take from front
-class Queue {
-private:
-  Node *front, *rear;
-  int count, max;
-public:
-  Queue();
-  ~Queue();
-  void addToFront(string data);
-  void addToBack(string data);
-  void leave();
-  string getFront();
-  bool isEmpty();
-  int getCount() { return count; }
-  int getMax() { return max; }
-};
-
-=======
 // Queue Definitions
 // TODO: Dylan
 
@@ -49,7 +18,6 @@ Queue::~Queue(){
 }
 
 // Used for PDS
->>>>>>> origin/master
 void Queue::addToFront(string data) {
   Node *temp = new Node(data);
   if (rear == NULL) { rear = temp; }
@@ -60,10 +28,7 @@ void Queue::addToFront(string data) {
   front = temp;
 }
 
-<<<<<<< HEAD
-=======
 // Used for Breadth-First
->>>>>>> origin/master
 void Queue::addToBack(string data) {
   Node *temp = new Node(data);
   if (front == NULL) { front = temp; }
@@ -95,105 +60,6 @@ bool Queue::isEmpty() {
   }
   return false;
 }
-
-<<<<<<< HEAD
-// TODO: Dylan
-// Heap class
-// A*
-class Heap {
-private:
-  vector<string> data;
-  int last, max;
-public:
-  Heap() {
-    last = -1;
-    max = -1;
-  }
-  ~Heap() {}
-  void insertIntoHeap(string mData);
-  string deleteFromHeap();
-  bool heapCompare(string one, string two);
-  int getMax() { return max; }
-};
-
-void Heap::insertIntoHeap(string mData) {
-  last++;
-  // What to do with count & max?
-  data.at(last) = mData;
-  // First value in vector
-  if (last == 0) { return; }
-  int swappingIndex = last, parentIndex;
-  string temp;
-  bool swapping = true;
-  while (swapping) {
-    swapping = false;
-    // Find which side it is
-    if (swappingIndex % 2 == 0) {
-      parentIndex = (swappingIndex / 2) - 1; // right
-    } else {
-      parentIndex = (swappingIndex / 2); // left
-    }
-    // do the swap if needed
-    if (parentIndex >= 0) {
-      // Check if the swappingIndex should be higher in the tree
-      if (heapCompare(data.at(parentIndex), data.at(swappingIndex))) {
-        temp = data[swappingIndex];
-        data.at(swappingIndex) = data.at(parentIndex);
-        data.at(parentIndex) = temp;
-        swapping = true;
-        swappingIndex = parentIndex;
-      }
-    }
-  }
-}
-
-string Heap::deleteFromHeap() {
-  if (last == 0) { last--; return data.at(0); }
-
-  // Save deleted root and move the last value in tree to the root
-  string deleted = data.at(0);
-  data.at(0) = data.at(last);
-  data.at(last) = "0"; last--;
-
-  // Resort tree
-  int leftIndex, rightIndex, parentIndex = 0;
-  string temp;
-  bool swapping = true;
-  while (swapping) {
-    swapping = false;
-    leftIndex = (parentIndex * 2) + 1;
-    rightIndex = (parentIndex * 2) + 2;
-
-    temp = data.at(parentIndex);
-
-    // Check if left or right is bigger than parent
-    if (heapCompare(data.at(parentIndex), data.at(leftIndex)) || heapCompare(data.at(parentIndex), data.at(rightIndex))) {
-      swapping = true;
-      // right is bigger
-      if (heapCompare(data.at(leftIndex), data.at(rightIndex))) {
-        data.at(parentIndex) = data.at(rightIndex);
-        data.at(rightIndex) = temp;
-        parentIndex = rightIndex;
-      }
-      //  left is bigger
-      else {
-        data.at(parentIndex) = data.at(leftIndex);
-        data.at(leftIndex) = temp;
-        parentIndex = leftIndex;
-      }
-    }
-  }
-}
-
-// Comapare two strings and return true if two should be higher in the tree than one
-// TODO: Dylan
-bool Heap::heapCompare(string one, string two) {
-  return true;
-}
-=======
-int Queue::getCount() { return count; }
-
-int Queue::getMax() { return max; }
 
 // Heap Definitions
 Heap::Heap() {
@@ -279,12 +145,37 @@ string Heap::deleteFromHeap() {
    return true;
  }
 
->>>>>>> origin/master
  // TODO: Alex
  // Hash function
  string hash(string toHash) {
    return toHash;
  }
+
+// Move the '0' in the string left by one place.
+ string moveLeft(string temp, int pos) {
+   char zero = temp[pos];
+   temp[pos] = temp [pos-1];
+   temp[pos-1] = zero;
+ }
+ // Move the '0' in the string up by one place.
+ string moveUp(string temp, int pos) {
+   char zero = temp[pos];
+   temp[pos] = temp [pos-3];
+   temp[pos-3] = zero;
+ }
+ // Move the '0' in the string right by one place.
+ string moveRight(string temp, int pos) {
+   char zero = temp[pos];
+   temp[pos] = temp [pos+1];
+   temp[pos+1] = zero;
+ }
+ // Move the '0' in the string down by one place.
+ string moveDown(string temp, int pos){
+   char zero = temp[pos];
+   temp[pos] = temp [pos+3];
+   temp[pos+3] = zero;
+ }
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 // Search Algorithm:  Breadth-First Search
@@ -322,7 +213,67 @@ string breadthFirstSearch(string const initialState, string const goalState, int
       if (temp == goalState) {
         break;
       }
-      // add temps children to Q
+      // If 0 can move left (x12x45x67)
+      // If 0 can move Up (xxx345678)
+      // If 0 can move right (01x34x67x)
+      // If 0 can move down (012345xxx)
+      string right = "0", up = "0", left = "0", down = "0";
+      if (temp[0] == '0') {
+        right = moveRight(temp, 0);
+        down = moveDown(temp, 0);
+      }
+      else if (temp[1] == '0') {
+        left = moveLeft(temp, 1);
+        right = moveRight(temp, 1);
+        down = moveDown(temp, 1);
+      }
+      else if (temp[2] == '0') {
+        left = moveLeft(temp, 2);
+        down = moveDown(temp, 2);
+      }
+      else if (temp[3] == '0') {
+        up = moveUp(temp, 3);
+        right = moveRight(temp, 3);
+        down = moveDown(temp, 3);
+      }
+      else if (temp[4] == '0') {
+        left = moveLeft(temp, 4);
+        up = moveUp(temp, 4);
+        right = moveRight(temp, 4);
+        down = moveDown(temp, 4);
+      }
+      else if (temp[5] == '0') {
+        left = moveLeft(temp, 5);
+        up = moveUp(temp, 5);
+        down = moveDown(temp, 5);
+      }
+      else if (temp[6] == '0') {
+        up = moveUp(temp, 6);
+        right = moveRight(temp, 6);
+      }
+      else if (temp[7] == '0') {
+        left = moveLeft(temp, 7);
+        up = moveUp(temp, 7);
+        right = moveRight(temp, 7);
+      }
+      else if (temp[8] == '0') {
+        left = moveLeft(temp, 8);
+        up = moveUp(temp, 8);
+      }
+
+      // Add new states to Q
+      if (left != "0") {
+        Q.addToBack(left);
+      }
+      if (up != "0") {
+        Q.addToBack(up);
+      }
+      if (right != "0") {
+        Q.addToBack(right);
+      }
+      if (down != "0") {
+        Q.addToBack(down);
+      }
     }
 
 //***********************************************************************************************************

@@ -11,12 +11,8 @@
 
 #include "puzzle.h"
 
-<<<<<<< HEAD
-=======
 struct Node {
-  Node() {}
   Node(string mData) : data(mData), next(NULL), prev(NULL) {}
-  Node(string mData, Node *mNext, Node *mPrev) : data(mData), next(mNext), prev(mPrev) {}
   string data;
   Node *next, *prev;
 };
@@ -53,11 +49,13 @@ public:
   int getMax() { return max; }
 };
 
->>>>>>> origin/master
 string hash(string toHash);
+string moveLeft(string temp, int pos);
+string moveUp(string temp, int pos);
+string moveRight(string temp, int pos);
+string moveDown(string temp, int pos);
 
 const heuristicFunction HEURISTIC_FUNCTION=manhattanDistance;
-
 
 //Function prototypes
 string progressiveDeepeningSearch_No_VisitedList(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime, int ultimateMaxDepth);
