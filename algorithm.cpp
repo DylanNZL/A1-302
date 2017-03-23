@@ -48,6 +48,7 @@ void Queue::addToBack(Puzzle *data) {
 
 // Delete the first value in the queue and return it
 Puzzle * Queue::leave() {
+  if (count < 0) { cout << count << endl; }
   count--;
   Node * temp;
   temp = front;
@@ -56,7 +57,6 @@ Puzzle * Queue::leave() {
 
   Puzzle *deleted = temp->data;
   delete temp;
-  count--;
 
   return deleted;
 }
@@ -67,6 +67,8 @@ bool Queue::isEmpty() {
   }
   return false;
 }
+
+int Queue::getCount() { return count; }
 
 int Queue::getMax() { return max; }
 
@@ -190,7 +192,7 @@ Puzzle Heap::deleteFromHeap() {
 	  maxQLength = 0;
     Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int count = 1;
+    int loop = 1;
     while (!Q.isEmpty()) {
       temp = Q.leave();
 
@@ -212,16 +214,16 @@ Puzzle Heap::deleteFromHeap() {
       }
       delete temp;
       // DEBUG:
-      if (count % 1000 == 0) {
-        cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
+      if (loop % 1000 == 0) {
+        cout << "state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
       }
-      count++;
+      loop++;
   }
 //***********************************************************************************************************
     if (temp->goalMatch()) { path = temp->getPath(); }
     else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-    numOfStateExpansions = count;
+    numOfStateExpansions = loop;
     maxQLength = Q.getMax();
 	  return path;
 }
@@ -248,7 +250,7 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 	  maxQLength = 1;
     Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int count = 1;
+    int loop = 1;
     while (!Q.isEmpty()) {
       temp = Q.leave();
       if (temp->goalMatch()) {
@@ -285,16 +287,16 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
       }
       delete temp;
       // DEBUG:
-      if (count % 1000 == 0) {
-        cout << "state: " << count << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
+      if (loop % 1000 == 0) {
+        cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
       }
-      count++;
+      loop++;
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     if (temp->goalMatch()) { path = temp->getPath(); }
     else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
-    numOfStateExpansions = count;
+    numOfStateExpansions = loop;
     maxQLength = Q.getMax();
 	  return path;
 }
