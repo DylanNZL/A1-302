@@ -28,40 +28,19 @@ set /p testcase="Select Test Case: "
 @echo You picked Test case # %testcase%
 
 
-if %selection% == 2 (
+if %selection% == 1 (
     set param1= single_run breadth_first_search
 ) else if %selection% == 2 (
-    set param1= single_run Breadth_First_Search_VList
+    set param1= single_run breadth_first_search_vlist
 ) else if %selection% == 3 (
-    set param1= single_run PDS_No_VList
-) else if %selection% == 123 (
-    set param1= single_run PDS_VList
+    set param1= single_run pds_no_vlist
 ) else if %selection% == 4 (
-    set param1= single_run PDS_NonStrict_VList
+    set param1= single_run pds_nonstrict_vlist
 ) else if %selection% == 5 (
-    set param1= single_run aStar_MisplacedTiles
+    set param1= single_run astar_explist_misplacedtiles
 ) else if %selection% == 6 (
-    set param1= single_run aStar_Manhattan
-) else if %selection% == 7 (
-    set param1= single_run aStar_ExpList_MisplacedTiles
-) else if %selection% == 8 (
-    set param1= single_run aStar_ExpList_Manhattan
+    set param1= single_run astar_explist_manhattan
 )
-
-if(algorithmSelected == "breadth_first_search" ){
-    cout << setw(31) << std::left << "1) breadth_first_search";
-} else if(algorithmSelected == "breadth_first_search_vlist" ){
-    cout << setw(31) << std::left << "2) breadth_first_search_vlist";
-} else if(algorithmSelected == "pds_no_vlist" ){
-    cout << setw(31) << std::left << "3) pds_no_vlist";
-} else if(algorithmSelected == "pds_nonstrict_vlist" ){
-    cout << setw(31) << std::left << "4) pds_nonstrict_vlist";
-}  else if(algorithmSelected == "astar_explist_misplacedtiles" ){
-    cout << setw(31) << std::left << "5) astar_explist_misplacedtiles";
-}  else if(algorithmSelected == "astar_explist_manhattan" ){
-    cout << setw(31) << std::left << "6) astar_explist_manhattan";
-}
-
 
 if %testcase% == 1 (
     set param2= 042158367 123804765
