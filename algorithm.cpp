@@ -151,7 +151,8 @@ Puzzle Heap::deleteFromHeap() {
  // Comapare two strings and return true if two should be higher in the tree than one
  // TODO: Dylan
  bool Heap::heapCompare(Puzzle one, Puzzle two) {
-   return true;
+   if (one.getFCost() < two.getFCost()) return true;
+   return false;
  }
 
  // TODO: Alex
