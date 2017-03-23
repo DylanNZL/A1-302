@@ -11,7 +11,7 @@ using namespace std;
 // TODO: Dylan
 
 Queue::Queue() {
-  count = -1;  max = -1;
+  count = 0;  max = 0;
   front = NULL; rear = NULL;
 }
 
@@ -20,6 +20,9 @@ Queue::~Queue(){
 
 // Used for PDS
 void Queue::addToFront(Puzzle *data) {
+  count++;
+  // If the current size of Q is bigger than the max size, increment max
+  if (count > max) { max++; }
   Node *temp = new Node(data);
   if (rear == NULL) { rear = temp; }
   if (front != NULL) {
@@ -31,6 +34,9 @@ void Queue::addToFront(Puzzle *data) {
 
 // Used for Breadth-First
 void Queue::addToBack(Puzzle *data) {
+  count++;
+  // If the current size of Q is bigger than the max size, increment max
+  if (count > max) { max++; }
   Node *temp = new Node(data);
   if (front == NULL) { front = temp; }
   if (rear != NULL) {
@@ -42,6 +48,7 @@ void Queue::addToBack(Puzzle *data) {
 
 // Delete the first value in the queue and return it
 Puzzle * Queue::leave() {
+  count--;
   Node * temp;
   temp = front;
   front = front->next;
@@ -60,6 +67,8 @@ bool Queue::isEmpty() {
   }
   return false;
 }
+
+int Queue::getMax() { return max; }
 
 // Heap Definitions
 Heap::Heap() {
@@ -203,7 +212,7 @@ Puzzle Heap::deleteFromHeap() {
       }
 
       if (count % 1000 == 0) {
-        cout << "state: " << count << endl;
+        cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
       }
       count++;
   }
@@ -212,6 +221,7 @@ Puzzle Heap::deleteFromHeap() {
     if (temp->goalMatch()) { path = temp->getPath(); }
     else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
+    maxQLength = Q.getMax();
 	  return path;
 }
 
