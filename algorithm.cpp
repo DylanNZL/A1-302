@@ -190,7 +190,7 @@ Puzzle Heap::deleteFromHeap() {
 	  maxQLength = 0;
     Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int count = 0;
+    int count = 1;
     while (!Q.isEmpty()) {
       temp = Q.leave();
 
@@ -210,7 +210,7 @@ Puzzle Heap::deleteFromHeap() {
       if (temp->canMoveLeft()) {
         Q.addToBack(temp->moveLeft());
       }
-
+      // DEBUG:
       if (count % 1000 == 0) {
         cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
       }
@@ -221,6 +221,7 @@ Puzzle Heap::deleteFromHeap() {
     if (temp->goalMatch()) { path = temp->getPath(); }
     else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
+    numOfStateExpansions = count;
     maxQLength = Q.getMax();
 	  return path;
 }
@@ -244,10 +245,10 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
     cout << "------------------------------" << endl;
 
 	  startTime = clock();
-	  maxQLength = 0;
+	  maxQLength = 1;
     Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int count = 0;
+    int count = 1;
     while (!Q.isEmpty()) {
       temp = Q.leave();
       if (temp->goalMatch()) {
@@ -290,14 +291,18 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
           visited.push_back(temp->strBoard);
         }
       }
+      // DEBUG:
       if (count % 1000 == 0) {
-        cout << "state: " << count << endl;
+        cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
       }
       count++;
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-	  path = "DDRRLLLUUU";  //this is just a dummy path for testing the function
+    if (temp->goalMatch()) { path = temp->getPath(); }
+    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    numOfStateExpansions = count;
+    maxQLength = Q.getMax();
 	  return path;
 }
 
