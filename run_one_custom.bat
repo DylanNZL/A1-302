@@ -27,40 +27,19 @@ echo.
 set /p testcase="Select Test Case: "
 @echo You picked Test case # %testcase%
 
+if %selection% == 1 ( set param1= single_run breadth_first_search
+  ) else if %selection% == 2 ( set param1= single_run breadth_first_search_vlist
+  ) else if %selection% == 3 ( set param1= single_run pds_no_vlist
+  ) else if %selection% == 4 ( set param1= single_run pds_nonstrict_vlist
+  ) else if %selection% == 5 ( set param1= single_run astar_explist_misplacedtiles
+  ) else if %selection% == 6 ( set param1= single_run astar_explist_manhattan )
 
-if %selection% == 1 (
-    set param1= single_run breadth_first_search
-) else if %selection% == 2 (
-    set param1= single_run breadth_first_search_vlist
-) else if %selection% == 3 (
-    set param1= single_run pds_no_vlist
-) else if %selection% == 4 (
-    set param1= single_run pds_nonstrict_vlist
-) else if %selection% == 5 (
-    set param1= single_run astar_explist_misplacedtiles
-) else if %selection% == 6 (
-    set param1= single_run astar_explist_manhattan
-)
-
-if %testcase% == 1 (
-    set param2= 042158367 123804765
-
-) else if %testcase% == 2 (
-    set param2= 364058271 123804765
-
-) else if %testcase% == 3 (
-    set param2= 281463075 123804765
-
-) else if %testcase% == 4 (
-   set param2= 567408321 123804765
-
-) else if %testcase% == 5 (
-    set param2= 463508721 123804765
-
-) else if %testcase% == 6 (
-    set param2= 471506238 123804765
-
-)
+if %testcase% == 1 ( set param2= 042158367 123804765
+  ) else if %testcase% == 2 ( set param2= 364058271 123804765
+  ) else if %testcase% == 3 ( set param2= 281463075 123804765
+  ) else if %testcase% == 4 ( set param2= 567408321 123804765
+  ) else if %testcase% == 5 ( set param2= 463508721 123804765
+  ) else if %testcase% == 6 ( set param2= 471506238 123804765 )
 
 set param=%param1% %param2%
 echo %param%

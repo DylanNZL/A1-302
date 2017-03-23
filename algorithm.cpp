@@ -200,21 +200,21 @@ Puzzle Heap::deleteFromHeap() {
         break;
       }
 
-      if (temp->canMoveUp()) {
+      if (temp->canMoveUp() && temp->getPath()[temp->getPathLength() - 1] != 'D') {
         Q.addToBack(temp->moveUp());
       }
-      if (temp->canMoveRight()) {
+      if (temp->canMoveRight() && temp->getPath()[temp->getPathLength() - 1] != 'L') {
         Q.addToBack(temp->moveRight());
       }
-      if (temp->canMoveDown()) {
+      if (temp->canMoveDown() && temp->getPath()[temp->getPathLength() - 1] != 'U') {
         Q.addToBack(temp->moveDown());
       }
-      if (temp->canMoveLeft()) {
+      if (temp->canMoveLeft() && temp->getPath()[temp->getPathLength() - 1] != 'R') {
         Q.addToBack(temp->moveLeft());
       }
       delete temp;
       // DEBUG:
-      if (loop % 1000 == 0) {
+      if (loop % 10000 == 0) {
         cout << "state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
       }
       loop++;
@@ -257,28 +257,28 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         break;
       }
 
-      if (temp->canMoveUp()) {
+      if (temp->canMoveUp() && temp->getPath()[temp->getPathLength() - 1] != 'D') {
         Puzzle *p = temp->moveUp();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
         }
       }
-      if (temp->canMoveRight()) {
+      if (temp->canMoveRight() && temp->getPath()[temp->getPathLength() - 1] != 'L') {
         Puzzle *p = temp->moveRight();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
         }
       }
-      if (temp->canMoveDown()) {
+      if (temp->canMoveDown() && temp->getPath()[temp->getPathLength() - 1] != 'U') {
         Puzzle *p = temp->moveDown();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
         }
       }
-      if (temp->canMoveLeft()) {
+      if (temp->canMoveLeft() && temp->getPath()[temp->getPathLength() - 1] != 'R') {
         Puzzle *p = temp->moveLeft();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
