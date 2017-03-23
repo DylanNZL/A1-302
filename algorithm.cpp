@@ -15,7 +15,7 @@ Queue::Queue() {
   front = NULL; rear = NULL;
 }
 
-Queue::~Queue(){
+Queue::~Queue() {
 }
 
 // Used for PDS
@@ -256,43 +256,31 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 
       if (temp->canMoveUp()) {
         Puzzle *p = temp->moveUp();
-        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
-
-        } else {
+        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
-        }
       }
       if (temp->canMoveRight()) {
         Puzzle *p = temp->moveRight();
-        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
-
-        } else {
+        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
-        }
       }
       if (temp->canMoveDown()) {
         Puzzle *p = temp->moveDown();
-        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
-
-        } else {
+        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
-        }
       }
       if (temp->canMoveLeft()) {
         Puzzle *p = temp->moveLeft();
-        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
-
-        } else {
+        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
-        }
       }
       // DEBUG:
       if (count % 1000 == 0) {
-        cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
+        cout << "state: " << count << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
       }
       count++;
   }
