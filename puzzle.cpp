@@ -137,13 +137,13 @@ string Puzzle::toString(){
   return stringPath;
 }
 
-
-
 bool Puzzle::goalMatch(){
-	bool result=false;
-  
-    //this is incomplete...
-	return result;
+	for(int i=0; i < 3; i++){
+		for(int j=0; j < 3; j++){
+			if (board[i][j] != goalBoard[i][j]) return false;
+		}
+  }
+	return true;
 }
 
 bool Puzzle::canMoveLeft(){
@@ -160,7 +160,6 @@ bool Puzzle::canMoveRight(){
    return (x0 < 2);
 
 }
-
 
 bool Puzzle::canMoveUp(){
 
@@ -180,10 +179,10 @@ bool Puzzle::canMoveDown(){
 bool Puzzle::canMoveLeft(int maxDepth){
   	//put your implementations here
 }
+
 bool Puzzle::canMoveRight(int maxDepth){
    //put your implementations here
 }
-
 
 bool Puzzle::canMoveUp(int maxDepth){
    //put your implementations here
@@ -200,7 +199,7 @@ Puzzle *Puzzle::moveLeft(){
 	Puzzle *p = new Puzzle(*this);
 
 
-   if(x0 > 0){
+   if(x0 > 0) {
 
 		p->board[y0][x0] = p->board[y0][x0-1];
 		p->board[y0][x0-1] = 0;
@@ -218,7 +217,6 @@ Puzzle *Puzzle::moveLeft(){
 	return p;
 
 }
-
 
 Puzzle *Puzzle::moveRight(){
 
@@ -244,7 +242,6 @@ Puzzle *Puzzle::moveRight(){
 	return p;
 
 }
-
 
 Puzzle *Puzzle::moveUp(){
 

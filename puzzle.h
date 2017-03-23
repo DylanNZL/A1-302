@@ -68,7 +68,6 @@ public:
     Puzzle * moveUp();
     Puzzle * moveDown();
 
-
     const string getPath();
 
     void setDepth(int d);
@@ -76,7 +75,7 @@ public:
 
     int getPathLength();
     int getFCost();
-	int getHCost();
-	int getGCost();
+		int getHCost();
+		int getGCost();
 
 };

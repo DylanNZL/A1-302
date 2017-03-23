@@ -12,8 +12,8 @@
 #include "puzzle.h"
 
 struct Node {
-  Node(Puzzle mData) : data(mData), next(NULL), prev(NULL) {}
-  Puzzle data;
+  Node(Puzzle *&mData) : data(mData), next(NULL), prev(NULL) {}
+  Puzzle *data;
   Node *next, *prev;
 };
 
@@ -25,9 +25,9 @@ private:
 public:
   Queue();
   ~Queue();
-  void addToFront(Puzzle data);
-  void addToBack(Puzzle data);
-  Puzzle leave();
+  void addToFront(Puzzle *data);
+  void addToBack(Puzzle *data);
+  Puzzle * leave();
   bool isEmpty();
   int getCount();
   int getMax();

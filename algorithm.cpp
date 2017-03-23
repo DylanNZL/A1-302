@@ -19,7 +19,7 @@ Queue::~Queue(){
 }
 
 // Used for PDS
-void Queue::addToFront(Puzzle data) {
+void Queue::addToFront(Puzzle *data) {
   Node *temp = new Node(data);
   if (rear == NULL) { rear = temp; }
   if (front != NULL) {
@@ -30,7 +30,7 @@ void Queue::addToFront(Puzzle data) {
 }
 
 // Used for Breadth-First
-void Queue::addToBack(Puzzle data) {
+void Queue::addToBack(Puzzle *data) {
   Node *temp = new Node(data);
   if (front == NULL) { front = temp; }
   if (rear != NULL) {
@@ -41,13 +41,13 @@ void Queue::addToBack(Puzzle data) {
 }
 
 // Delete the first value in the queue and return it
-Puzzle Queue::leave() {
+Puzzle * Queue::leave() {
   Node * temp;
   temp = front;
   front = front->next;
   if (front == NULL) { rear = NULL; }
 
-  Puzzle deleted = temp->data;
+  Puzzle *deleted = temp->data;
   delete temp;
   count--;
 
@@ -164,6 +164,7 @@ Puzzle Heap::deleteFromHeap() {
  * 5. Find all the descendants of state (N) not in Visited and create all the one-step extensions of N to each descendant.
  * 6. Add the extended paths to END of Q; add children of state (N) to Visited.
  * 7. Go to Step 2
+ * Up, Right, Down, then Left
  */
  ////////////////////////////////////////////////////////////////////////////////////////////
  string breadthFirstSearch(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime) {
@@ -171,28 +172,46 @@ Puzzle Heap::deleteFromHeap() {
 	  clock_t startTime;
     //add necessary variables here
     Queue Q;
-    string temp;
     //algorithm implementation
-	  // cout << "------------------------------" << endl;
-    // cout << "<<breadthFirstSearch>>" << endl;
-    // cout << "------------------------------" << endl;
+	  cout << "------------------------------" << endl;
+    cout << "<<breadthFirstSearch>>" << endl;
+    cout << "------------------------------" << endl;
 
 	  startTime = clock();
 	  maxQLength = 0;
-    Q.addToBack(Puzzle(initialState, goalState));
-
+    Puzzle * temp = new Puzzle(initialState, goalState);
+    Q.addToBack(temp);
+    int count = 0;
     while (!Q.isEmpty()) {
-      Puzzle temp = Q.leave();
-      if (temp.goalMatch()) {
-        break;
-      } else {
+      temp = Q.leave();
 
+      if (temp->goalMatch()) {
+        break;
       }
+
+      if (temp->canMoveUp()) {
+        Q.addToBack(temp->moveUp());
+      }
+      if (temp->canMoveRight()) {
+        Q.addToBack(temp->moveRight());
+      }
+      if (temp->canMoveDown()) {
+        Q.addToBack(temp->moveDown());
+      }
+      if (temp->canMoveLeft()) {
+        Q.addToBack(temp->moveLeft());
+      }
+
+      if (count % 1000 == 0) {
+        cout << "state: " << count << endl;
+      }
+      count++;
   }
 
 //***********************************************************************************************************
+    if (temp->goalMatch()) { path = temp->getPath(); }
+    else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-	  path = "DDRRLLLUUU";  //this is just a dummy path for testing the function
 	  return path;
 }
 
@@ -201,9 +220,6 @@ Puzzle Heap::deleteFromHeap() {
 // Search Algorithm:  Breadth-First Search with VisitedList
 //
 // Move Generator:
-/**
- *
- */
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 string breadthFirstSearch_with_VisitedList(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime) {
@@ -211,24 +227,63 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 	  clock_t startTime;
     //add necessary variables here
     Queue Q;
-    string temp;
     vector<string> visited;
     //algorithm implementation
-	  // cout << "------------------------------" << endl;
-    //    cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
-    //    cout << "------------------------------" << endl;
-    //Puzzle puzzle = new Puzzle(initialState, goalState);
+	  cout << "------------------------------" << endl;
+    cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
+    cout << "------------------------------" << endl;
+
 	  startTime = clock();
 	  maxQLength = 0;
-    Q.addToBack(Puzzle(initialState, goalState));
-
+    Puzzle * temp = new Puzzle(initialState, goalState);
+    Q.addToBack(temp);
+    int count = 0;
     while (!Q.isEmpty()) {
-      Puzzle temp = Q.leave();
-      if (temp.goalMatch()) {
+      temp = Q.leave();
+      if (temp->goalMatch()) {
         break;
-      } else {
-
       }
+
+      if (temp->canMoveUp()) {
+        Puzzle *p = temp->moveUp();
+        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
+
+        } else {
+          Q.addToBack(temp->moveUp());
+          visited.push_back(temp->strBoard);
+        }
+      }
+      if (temp->canMoveRight()) {
+        Puzzle *p = temp->moveRight();
+        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
+
+        } else {
+          Q.addToBack(temp->moveRight());
+          visited.push_back(temp->strBoard);
+        }
+      }
+      if (temp->canMoveDown()) {
+        Puzzle *p = temp->moveDown();
+        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
+
+        } else {
+          Q.addToBack(temp->moveDown());
+          visited.push_back(temp->strBoard);
+        }
+      }
+      if (temp->canMoveLeft()) {
+        Puzzle *p = temp->moveLeft();
+        if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
+
+        } else {
+          Q.addToBack(temp->moveLeft());
+          visited.push_back(temp->strBoard);
+        }
+      }
+      if (count % 1000 == 0) {
+        cout << "state: " << count << endl;
+      }
+      count++;
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);

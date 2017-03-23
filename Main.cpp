@@ -257,7 +257,6 @@ void AnimateSolution(string const initialState, string const goalState, string p
  */
 int main( int argc, char* argv[] ){
    string path;
-
    //~ cout << "=========<< SEARCH ALGORITHMS >>=========" << endl;
 	if(argc < 5){
 		cout << "SYNTAX: main.exe <TYPE_OF_RUN = \"batch_run\" or \"single_run\"> ALGORITHM_NAME \"INITIAL STATE\" \"GOAL STATE\" " << endl;
@@ -286,8 +285,8 @@ int main( int argc, char* argv[] ){
   int numOfAttemptedNodeReExpansions=0;
 	float actualRunningTime=0.0;
 	//=========================================================================================================
-    // cout << "typeOfRun = " << typeOfRun << endl;
-    // cout << "algorithmSelected = " << algorithmSelected << endl;
+    cout << "typeOfRun = " << typeOfRun << endl;
+    cout << "algorithmSelected = " << algorithmSelected << endl;
 try{
 	if(typeOfRun == "single_run") cout << endl << "============================================<< EXPERIMENT RESULTS >>============================================" << endl;
 	//=========================================================================================================
