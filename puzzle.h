@@ -3,12 +3,9 @@
 
 using namespace std;
 
-
 enum heuristicFunction{misplacedTiles, manhattanDistance};
 
-
-class Puzzle{
-
+class Puzzle {
 private:
     string path;
     int pathLength;

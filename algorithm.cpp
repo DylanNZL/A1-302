@@ -216,7 +216,6 @@ Puzzle Heap::deleteFromHeap() {
       }
       count++;
   }
-
 //***********************************************************************************************************
     if (temp->goalMatch()) { path = temp->getPath(); }
     else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
@@ -260,8 +259,8 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
 
         } else {
-          Q.addToBack(temp->moveUp());
-          visited.push_back(temp->strBoard);
+          Q.addToBack(p);
+          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveRight()) {
@@ -269,8 +268,8 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
 
         } else {
-          Q.addToBack(temp->moveRight());
-          visited.push_back(temp->strBoard);
+          Q.addToBack(p);
+          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveDown()) {
@@ -278,8 +277,8 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
 
         } else {
-          Q.addToBack(temp->moveDown());
-          visited.push_back(temp->strBoard);
+          Q.addToBack(p);
+          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveLeft()) {
@@ -287,8 +286,8 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         if (find(visited.begin(), visited.end(), p->strBoard) != visited.end()) {
 
         } else {
-          Q.addToBack(temp->moveLeft());
-          visited.push_back(temp->strBoard);
+          Q.addToBack(p);
+          visited.push_back(p->strBoard);
         }
       }
       // DEBUG:
