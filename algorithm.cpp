@@ -210,6 +210,7 @@ Puzzle Heap::deleteFromHeap() {
       if (temp->canMoveLeft()) {
         Q.addToBack(temp->moveLeft());
       }
+      delete temp;
       // DEBUG:
       if (count % 1000 == 0) {
         cout << "state: " << count << " maxQ: " << Q.getMax() << endl;
@@ -259,25 +260,30 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
+        }
       }
       if (temp->canMoveRight()) {
         Puzzle *p = temp->moveRight();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
+        }
       }
       if (temp->canMoveDown()) {
         Puzzle *p = temp->moveDown();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
+        }
       }
       if (temp->canMoveLeft()) {
         Puzzle *p = temp->moveLeft();
         if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
           Q.addToBack(p);
           visited.push_back(p->strBoard);
+        }
       }
+      delete temp;
       // DEBUG:
       if (count % 1000 == 0) {
         cout << "state: " << count << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
