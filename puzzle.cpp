@@ -163,19 +163,39 @@ bool Puzzle::canMoveDown() {
 //these functions will be useful for Progressive Deepening Search
 
 bool Puzzle::canMoveLeft(int maxDepth) {
-  	//put your implementations here
+		//put your implementations here
+		if (depth < maxDepth) {
+				return (x0 > 0);
+		} else {
+				return false;
+		}
 }
 
 bool Puzzle::canMoveRight(int maxDepth) {
-   //put your implementations here
+	//put your implementations here
+	if (depth < maxDepth) {
+			return (x0 < 2);
+	} else {
+			return false;
+	}
 }
 
 bool Puzzle::canMoveUp(int maxDepth) {
-   //put your implementations here
+	//put your implementations here
+	if (depth < maxDepth) {
+			return (y0 > 0);
+	} else {
+			return false;
+	}
 }
 
 bool Puzzle::canMoveDown(int maxDepth) {
-   //put your implementations here
+	//put your implementations here
+	if (depth < maxDepth) {
+			return (y0 < 2);
+	} else {
+			return false;
+	}
 }
 
 ///////////////////////////////////////////////
