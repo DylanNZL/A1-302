@@ -320,47 +320,55 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     cout << "------------------------------" << endl;
 	  startTime = clock();
     maxQLength = 1;
-    int i = 0, depth = 1, loop = 1;
+    int depth = 1, loop = 0;
 
     Puzzle *temp = new Puzzle (initialState, goalState);
-    Puzzle *OG = temp;
+    Puzzle *OG = new Puzzle (initialState, goalState);
+    temp->setDepth(0);
     Q.addToFront(temp);
     while (depth < ultimateMaxDepth) {
       while (!Q.isEmpty()) {
+          temp = Q.leave();
           if (temp->goalMatch()) {
               break;
           }
-          temp = Q.leave();
+
+          //cout << "Temp is " << temp->toString() << " and depth is " << temp->getDepth() << " vs " << depth << endl;
+
           if (temp->canMoveUp(depth) && temp->getPath()[temp->getPathLength() - 1] != 'D') {
-              temp->updateDepth();
               Q.addToFront(temp->moveUp());
           }
           if (temp->canMoveRight(depth) && temp->getPath()[temp->getPathLength() - 1] != 'L') {
-              temp->updateDepth();
               Q.addToFront(temp->moveRight());
           }
           if (temp->canMoveDown(depth) && temp->getPath()[temp->getPathLength() -1] != 'U') {
-              temp->updateDepth();
               Q.addToFront(temp->moveDown());
           }
           if (temp->canMoveLeft(depth) && temp->getPath()[temp->getPathLength() - 1] != 'R') {
-              temp->updateDepth();
               Q.addToFront(temp->moveLeft());
           }
-          if (loop % 1000 == 0) {
-            cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
+          temp->updateDepth();
+          if (loop % 1000000 == 0) {
+            //cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
+            //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
           }
-          loop++;
+          //loop++;
       }
-      Q.addToBack(OG);
-      depth++;
+      if (temp->goalMatch()) {
+          break;
+      }
+      if (Q.isEmpty()) {
+          depth++;
+          OG->setDepth(0);
+          Q.addToFront(OG);
+      }
     }
-    while (i != 1000000000) { i++; }
 
 //***********************************************************************************************************
     actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     maxQLength = Q.getMax();
-	  path = temp->getPath();  //this is just a dummy path for testing the function
+    if (temp->goalMatch()) { path = temp->getPath(); }
+    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
 	  return path;
 }
 
