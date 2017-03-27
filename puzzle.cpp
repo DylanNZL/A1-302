@@ -96,17 +96,38 @@ int Puzzle::h(heuristicFunction hFunction) {
 	int h=0;
 	int numOfMisplacedTiles=0;
 
-	switch(hFunction) {
+	switch(hFunction) { 
 		case misplacedTiles:
 						//place your implementation here
+			//Loop through board and compare with goal board for number of misplaced tiles
+			for(int i =0;i<3;++i){
+				for(int j = 0;j<3;++j){
+					if(board[i][j]!= 0 && board[i][j]!=goalBoard[i][j]){ //ignore empty space in board(0)
+						++numOfMisplacedTiles;
+					}
+				}//end j
+			}//end i
+
             h = numOfMisplacedTiles;
-		        break;
+		    break;
 
 		case manhattanDistance:
 		        //place your implementation here
-		        h = sum;
-		        break;
-
+			for(int x1 =0;x1<3;++x1){
+				for(int y1 = 0;y1<3;++y1){
+					if(board[x1][y1]!=0 && board[x1][y1]!=goalBoard[x1][y1]){//ignore empty space in board(0)
+						for(int x2 = 0; x2<3; ++x2){
+							for(int y2 = 0; y2<3; ++y2){
+								if(board[x1][y1] == board[x2][y2]){
+									sum += (abs(x1-x2)+abs(y1-y2));//Calc manhatten distance with sum of(|x1-x2| + |y1-y2|) 
+								}
+							}//end loop y2
+						}//end loop x2
+					}
+				}//end loop y1
+			}//end loop x1
+		    h = sum;
+		    break;
 	};
 	return h;
 }

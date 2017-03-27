@@ -1,4 +1,5 @@
 #include "algorithm.h"
+#include "puzzle.h" //Need the enum heuristicFunction for A*
 #include <algorithm> // check if vector contains a state
 #include <vector> // for visited list
 
@@ -406,13 +407,23 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     numOfDeletionsFromMiddleOfHeap = 0;
     numOfLocalLoopsAvoided = 0;
     numOfAttemptedNodeReExpansions = 0;
-    // cout << "------------------------------" << endl;
-    // cout << "<<aStar_ExpandedList>>" << endl;
-    // cout << "------------------------------" << endl;
+    cout << "------------------------------" << endl;
+    cout << "<<aStar_ExpandedList>>" << endl;
+    cout << "------------------------------" << endl;
+
 	  actualRunningTime = 0.0;
 	  startTime = clock();
 	  maxQLength = 0;
 //***********************************************************************************************************
+    Heap H;
+    Puzzle *temp_puzzle = new Puzzle(initialState, goalState);
+    H.insertIntoHeap(temp_puzzle);
+    int loop = 0;
+
+    while(!H.isEmpty()){
+
+    } //H is empty
+
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
 	  path = "DDRRLLLUUU"; //this is just a dummy path for testing the function
 	  return path;
