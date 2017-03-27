@@ -44,6 +44,7 @@ public:
   Heap();
   ~Heap();
   void insertIntoHeap(Puzzle mData);
+  bool isEmpty();
   Puzzle deleteFromHeap();
   bool heapCompare(Puzzle one, Puzzle two);
   int getMax() { return max; }

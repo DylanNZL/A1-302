@@ -1,5 +1,4 @@
 #include "algorithm.h"
-#include "puzzle.h" //Need the enum heuristicFunction for A*
 #include <algorithm> // check if vector contains a state
 #include <vector> // for visited list
 
@@ -147,6 +146,13 @@ Puzzle Heap::deleteFromHeap() {
        }
      }
    }
+}
+
+bool Heap::isEmpty(){
+  if (last<0){
+    return true;
+  }
+  return false;
 }
 
  // Comapare two strings and return true if two should be higher in the tree than one
@@ -417,7 +423,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
 //***********************************************************************************************************
     Heap H;
     Puzzle *temp_puzzle = new Puzzle(initialState, goalState);
-    H.insertIntoHeap(temp_puzzle);
+    H.insertIntoHeap(*temp_puzzle);
     int loop = 0;
 
     while(!H.isEmpty()){
