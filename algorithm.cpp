@@ -421,12 +421,30 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
 	  startTime = clock();
 	  maxQLength = 0;
 //***********************************************************************************************************
+
     Heap H;
     Puzzle *temp_puzzle = new Puzzle(initialState, goalState);
     H.insertIntoHeap(*temp_puzzle);
+    vector<string> e_list;
     int loop = 0;
 
     while(!H.isEmpty()){
+     
+      
+
+
+      if(temp_puzzle->canMoveUp() && temp_puzzle->getLastDirec() != 'D'){
+
+      }
+      if(temp_puzzle->canMoveRight() && temp_puzzle->getLastDirec() != 'L'){
+
+      }
+      if(temp_puzzle->canMoveDown() && temp_puzzle->getLastDirec() != 'U'){
+
+      }
+      if(temp_puzzle->canMoveLeft() && temp_puzzle->getLastDirec() != 'R'){
+
+      }
 
     } //H is empty
 
