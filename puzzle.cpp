@@ -75,6 +75,7 @@ void Puzzle::updateDepth(){
 
 void Puzzle::updateFCost() {
 	//fCost = ?
+	fCost = 
 }
 
 int Puzzle::getFCost() {
@@ -111,14 +112,16 @@ int Puzzle::h(heuristicFunction hFunction) {
             h = numOfMisplacedTiles;
 		    break;
 
+		//Case for finding manhatten distance of current board compared to goalboard
 		case manhattanDistance:
 		        //place your implementation here
 			for(int x1 =0;x1<3;++x1){
 				for(int y1 = 0;y1<3;++y1){
 					if(board[x1][y1]!=0 && board[x1][y1]!=goalBoard[x1][y1]){//ignore empty space in board(0)
-						for(int x2 = 0; x2<3; ++x2){
-							for(int y2 = 0; y2<3; ++y2){
-								if(board[x1][y1] == board[x2][y2]){
+						//continue until match is found in GoalBoard
+						for(int x2 = 0;x2<3; ++x2){
+							for(int y2 = 0;x2<3; ++y2){
+								if(board[x1][y1] == goalBoard[x2][y2]){
 									sum += (abs(x1-x2)+abs(y1-y2));//Calc manhatten distance with sum of(|x1-x2| + |y1-y2|) 
 								}
 							}//end loop y2
