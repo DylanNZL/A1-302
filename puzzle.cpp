@@ -74,8 +74,7 @@ void Puzzle::updateDepth(){
 }
 
 void Puzzle::updateFCost() {
-	//fCost = ?
-	fCost = 
+	fCost = hCost + pathLength;
 }
 
 int Puzzle::getFCost() {
