@@ -49,4 +49,5 @@ public:
     int getFCost();
 		int getHCost();
 		int getGCost();
+        char getLastDirec();
 };

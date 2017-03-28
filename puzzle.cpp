@@ -298,3 +298,7 @@ void Puzzle::printBoard() {
 int Puzzle::getPathLength() {
 	return pathLength;
 }
+
+char Puzzle::getLastDirec(){
+	return path.at(pathLength-1);
+}
