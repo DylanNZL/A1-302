@@ -353,52 +353,46 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     maxQLength = 1;
     int depth = 1, loop = 0;
 
-    Puzzle *temp = new Puzzle (initialState, goalState);
-    Puzzle *OG = new Puzzle (initialState, goalState);
-    temp->setDepth(0);
-    Q.addToFront(temp);
-    while (depth < ultimateMaxDepth) {
-      while (!Q.isEmpty()) {
-          temp = Q.leave();
-          if (temp->goalMatch()) {
-              break;
-          }
-
-          //cout << "Temp is " << temp->toString() << " and depth is " << temp->getDepth() << " vs " << depth << endl;
-
-          if (temp->canMoveUp(depth) && temp->getPath()[temp->getPathLength() - 1] != 'D') {
-              Q.addToFront(temp->moveUp());
-          }
-          if (temp->canMoveRight(depth) && temp->getPath()[temp->getPathLength() - 1] != 'L') {
-              Q.addToFront(temp->moveRight());
-          }
-          if (temp->canMoveDown(depth) && temp->getPath()[temp->getPathLength() -1] != 'U') {
-              Q.addToFront(temp->moveDown());
-          }
-          if (temp->canMoveLeft(depth) && temp->getPath()[temp->getPathLength() - 1] != 'R') {
-              Q.addToFront(temp->moveLeft());
-          }
-          temp->updateDepth();
-          if (loop % 1000000 == 0) {
-            //cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
-            //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
-          }
-          //loop++;
-      }
-      if (temp->goalMatch()) {
-          break;
-      }
-      if (Q.isEmpty()) {
-          depth++;
-          OG->setDepth(0);
-          Q.addToFront(OG);
-      }
+    Puzzle *OP = new Puzzle (initialState, goalState);
+    Q.addToFront(OP);
+    while (!Q.isEmpty() && depth < ultimateMaxDepth) {
+        OP = Q.leave();
+        if (OP->goalMatch()) {
+            break;
+        }
+        //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << OP->getPath() << " data is " << OP->toString() << endl;
+        if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
+            Q.addToFront(OP->moveUp());
+        }
+        if (OP->canMoveRight(depth) && OP->getPath()[OP->getPathLength() - 1] != 'L') {
+            Q.addToFront(OP->moveRight());
+        }
+        if (OP->canMoveDown(depth) && OP->getPath()[OP->getPathLength() - 1] != 'U') {
+            Q.addToFront(OP->moveDown());
+        }
+        if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
+            Q.addToFront(OP->moveLeft());
+        }
+        OP->updateDepth();
+        /*if (loop % 1000000 == 0) {
+          cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " depth: " << depth << " current path = " << OP->getPath() << " data is " << OP->toString() << endl;
+          //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
+        }*/
+        delete OP;
+        loop++;
+        if (Q.isEmpty()) {
+            depth++;
+            Puzzle *OS = new Puzzle (initialState, goalState);
+            OS->setDepth(0);
+            Q.addToFront(OS);
+        }
     }
 
 //***********************************************************************************************************
     actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     maxQLength = Q.getMax();
-    if (temp->goalMatch()) { path = temp->getPath(); }
+    numOfStateExpansions = loop;
+    if (OP->goalMatch()) { path = OP->getPath(); }
     else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
 	  return path;
 }
@@ -413,16 +407,61 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
 string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime, int ultimateMaxDepth){
     string path;
 	  clock_t startTime;
-    //add necessary variables here
-    // Q
-    // visited list with depths assosiated
-    // depth
-    //algorithm implementation
-	  // cout << "------------------------------" << endl;
-    //    cout << "<<progressiveDeepeningSearch_with_NonStrict_VisitedList>>" << endl;
-    //    cout << "------------------------------" << endl;
 	  startTime = clock();
-	  maxQLength = 0;
+    maxQLength = 1;
+    int depth = 1, loop = 0;
+    Queue Q;
+
+    //vector<visited> v;
+
+    struct visited {
+        int vDepth = 0;
+        string vData;
+    };
+
+    // visited list with depths assosiated
+	  cout << "------------------------------" << endl;
+    cout << "<<progressiveDeepeningSearch_with_NonStrict_VisitedList>>" << endl;
+    cout << "------------------------------" << endl;
+
+    Puzzle *OP = new Puzzle (initialState, goalState);
+    Q.addToFront(OP);
+    while (!Q.isEmpty() && depth < ultimateMaxDepth) {
+        OP = Q.leave();
+        if (OP->goalMatch()) {
+            break;
+        }
+        //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << OP->getPath() << " data is " << OP->toString() << endl;
+        if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
+            /*if (find(v.begin(), v.end(), OP->toString()) == v.end()) {
+              if (OP->getDepth() < v.vDepth) {
+                Q.addToFront(OP->moveUp());
+              }
+            }*/
+        }
+        if (OP->canMoveRight(depth) && OP->getPath()[OP->getPathLength() - 1] != 'L') {
+            Q.addToFront(OP->moveRight());
+        }
+        if (OP->canMoveDown(depth) && OP->getPath()[OP->getPathLength() - 1] != 'U') {
+            Q.addToFront(OP->moveDown());
+        }
+        if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
+            Q.addToFront(OP->moveLeft());
+        }
+        OP->updateDepth();
+        if (loop % 1000000 == 0) {
+          cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " depth: " << depth << " current path = " << OP->getPath() << " data is " << OP->toString() << endl;
+          //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
+        }
+        delete OP;
+        loop++;
+        if (Q.isEmpty()) {
+            depth++;
+            Puzzle *OS = new Puzzle (initialState, goalState);
+            OS->setDepth(0);
+            Q.addToFront(OS);
+        }
+    }
 //***********************************************************************************************************
     actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     path = "DDRRLLLUUU"; //this is just a dummy path for testing the function
