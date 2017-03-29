@@ -50,6 +50,24 @@ public:
   int getMax() { return max; }
 };
 
+class Hash{
+private:
+  static const int tableSize = 1024;
+  struct item{
+    string val;
+    item *next;
+  };
+  item *hashTable[tableSize];
+
+public:
+  Hash();
+  int hashValue(string key);
+  void addValue(string value);
+  bool valueExists(string value);
+  void deleteValue(string value);
+
+};
+
 string hash(string toHash);
 
 const heuristicFunction HEURISTIC_FUNCTION=manhattanDistance;

@@ -164,9 +164,33 @@ bool Heap::isEmpty(){
 
  // TODO: Alex
  // Hash function
- string hash(string toHash) {
-   return toHash;
- }
+Hash::Hash(){
+
+
+}
+
+int Hash::hashValue(string key){
+
+
+
+  return 0;
+}
+
+void Hash::addValue(string value){
+
+  return;
+}
+
+bool Hash::valueExists(string value){
+
+  return false;
+
+}
+void deleteValue(string value){
+
+
+  return;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
