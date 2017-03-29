@@ -1,4 +1,5 @@
 #include "algorithm.h"
+#include <string>
 #include <algorithm> // check if vector contains a state
 #include <vector> // for visited list
 
@@ -165,31 +166,106 @@ bool Heap::isEmpty(){
  // TODO: Alex
  // Hash function
 Hash::Hash(){
-
-
+	
+	for(int i =0;i<tableSize;++i){
+		hashTable[i] = new item;
+		hashTable[i]->value = "";
+		hashTable[i]->depth = -1;
+		hashTable[i]->next = nullptr;
+	}
 }
 
 int Hash::hashValue(string key){
-
-
-
-  return 0;
+	int total = 0;
+	string temp ="";
+	for(int i =0;i<key.length();++i){
+		if(key[i] !='0'){
+			temp = temp+key[i];
+		}
+	}
+	int hash=1;
+	int num=0;
+	for(int i =0;i<3;++i){
+		for(int j =0;j<3;++j){
+			num+=(int)temp[j];
+		}
+		hash*= num;
+		num = 0;
+	}
+	
+	hash%=tableSize;
+	return hash;
 }
 
-void Hash::addValue(string value){
-
-  return;
+bool Hash::addValue(string value){
+  int index = hashValue(value);
+	
+	if(hashTable[index]->value==""){
+		hashTable[index]->value = value;
+		return true;
+	}
+	
+	item* current = hashTable[index]->next;
+	if(current->value == value){
+		return false;
+	}
+	while(current!=nullptr){
+		current = current->next;
+		if(current->value == value){
+			return false;
+		}
+	}
+	
+	item* newItem = new item;
+	current->next = newItem;
+	newItem->value = value;
+	newItem->next = nullptr;
+	
+  return true;
 }
 
 bool Hash::valueExists(string value){
-
+	int index = hashValue(value);
+	item* current = hashTable[index];
+	while(current!=nullptr){
+		current = current->next;
+		if(current->value == value){
+			return true;
+		}
+	}
   return false;
-
 }
-void deleteValue(string value){
 
 
-  return;
+bool Hash::deleteValue(string value){
+	int index = hashValue(value);
+	
+	item* current = hashTable[index];
+	item* temp = nullptr;
+	
+	if(current->value==value){
+		if(current->next==nullptr){
+			current->value="";
+			return true;
+		}
+		temp=current->next;
+		current->value =temp->value;
+		current->next = temp->next;
+		delete temp;
+		return true;
+	}
+	temp = current;
+	current=current->next;
+	while(current!=nullptr){
+		if(current->value==value){
+			temp->next = current->next;
+			delete current;
+			return true;
+		}
+		temp = current;
+		current = current->next;
+	}
+  return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
