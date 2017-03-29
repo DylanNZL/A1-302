@@ -226,6 +226,7 @@ void deleteValue(string value){
     Q.addToBack(temp);
     int loop = 1;
     while (!Q.isEmpty()) {
+      loop++;
       temp = Q.leave();
 
       if (temp->goalMatch()) {
@@ -246,10 +247,9 @@ void deleteValue(string value){
       }
       delete temp;
       // DEBUG:
-      if (loop % 10000 == 0) {
+      /*if (loop % 10000 == 0) {
         cout << "state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
-      }
-      loop++;
+      }*/
   }
 //***********************************************************************************************************
     if (temp->goalMatch()) { path = temp->getPath(); }
@@ -284,6 +284,7 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
     Q.addToBack(temp);
     int loop = 1;
     while (!Q.isEmpty()) {
+      loop++;
       temp = Q.leave();
       if (temp->goalMatch()) {
         break;
@@ -319,10 +320,10 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
       }
       delete temp;
       // DEBUG:
-      if (loop % 1000 == 0) {
+    /*  if (loop % 1000 == 0) {
         cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
       }
-      loop++;
+      */
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
@@ -356,6 +357,7 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
     while (!Q.isEmpty() && depth < ultimateMaxDepth) {
+        loop++;
         OP = Q.leave();
         if (OP->goalMatch()) {
             break;
@@ -379,7 +381,6 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
           //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
         }*/
         delete OP;
-        loop++;
         if (Q.isEmpty()) {
             depth++;
             Puzzle *OS = new Puzzle (initialState, goalState);
@@ -492,8 +493,8 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     int loop = 0;
 
     while(!H.isEmpty()){
-     
-      
+
+
 
 
       if(temp_puzzle->canMoveUp() && temp_puzzle->getLastDirec() != 'D'){
