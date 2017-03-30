@@ -55,17 +55,19 @@ private:
   static const int tableSize = 1024;
   struct item{
     string value;
-	  int depth;
+	  int cost;
     item *next;
   };
   item *hashTable[tableSize];
   int hashValue(string key);
 public:
   Hash();
-	bool addValue (string value);
+  ~Hash();
+	bool addValue (string value, int cost = -1);
   bool valueExists(string value);
-	bool deleteValue(string value);
+	bool deleteValue(string value, int cost = -1);
   void print();
+  int getCost(string value);
 };
 
 string hash(string toHash);

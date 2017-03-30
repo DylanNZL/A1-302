@@ -169,9 +169,21 @@ Hash::Hash(){
 	for(int i =0;i<tableSize;++i){
 		hashTable[i] = new item;
 		hashTable[i]->value = "";
-		hashTable[i]->depth = -1;
+		hashTable[i]->cost = -1;
 		hashTable[i]->next = nullptr;
 	}
+}
+
+Hash::~Hash(){
+  item *current, *temp;
+  for(int i =0; i<tableSize;++i){
+    current = hashTable[i];
+    while(current!=nullptr){
+      temp = current;
+      current = current->next;
+      delete temp;
+    }
+  }
 }
 
 int Hash::hashValue(string key){
@@ -188,12 +200,11 @@ int Hash::hashValue(string key){
 	return hash;
 }
 
-bool Hash::addValue(string value){
+bool Hash::addValue(string value, int cost){
   int index = hashValue(value);
-  cout<<value<<": "<<index<<endl;
-	
 	if(hashTable[index]->value==""){
 		hashTable[index]->value = value;
+    hashTable[index]->cost = cost;
 		return true;
 	}
 	item* current = hashTable[index];
@@ -209,6 +220,7 @@ bool Hash::addValue(string value){
 	item* newItem = new item;
 	current->next = newItem;
 	newItem->value = value;
+  newItem->cost = cost;
 	newItem->next = nullptr;
 	
   return true;
@@ -226,19 +238,21 @@ bool Hash::valueExists(string value){
   return false;
 }
 
-bool Hash::deleteValue(string value){
+bool Hash::deleteValue(string value, int cost){
 	int index = hashValue(value);
 	
 	item* current = hashTable[index];
 	item* temp = nullptr;
 	
-	if(current->value==value){
+	if(current->value==value && current->cost==cost){
 		if(current->next==nullptr){
 			current->value="";
+      current->cost = -1;
 			return true;
 		}
 		temp=current->next;
-		current->value =temp->value;
+		current->value = temp->value;
+    current->cost = temp->cost;
 		current->next = temp->next;
 		delete temp;
 		return true;
@@ -246,7 +260,7 @@ bool Hash::deleteValue(string value){
 	temp = current;
 	current=current->next;
 	while(current!=nullptr){
-		if(current->value==value){
+		if(current->value==value && current->cost==cost){
 			temp->next = current->next;
 			delete current;
 			return true;
@@ -269,6 +283,9 @@ void Hash::print(){
       cout<<"Index: "<<i<<":"<<endl;
       cout<<"Node "<<temp<<endl;
       cout<<hashTable[i]->value<<endl;
+      if(hashTable[i]->cost!=-1){
+        cout<<"Cost: "<<hashTable[i]->cost<<endl;
+      }
       cout<<"==================="<<endl;
       current = hashTable[i]->next;
 
@@ -278,12 +295,28 @@ void Hash::print(){
         cout<<"Index: "<<i<<":"<<endl;
         cout<<"Node "<<temp<<endl;
         cout<<current->value<<endl;
+        if(current->cost!=-1){
+          cout<<"Cost: "<<current->cost<<endl;
+        }
         cout<<"==================="<<endl;
         current = current->next;
       }
     }
   }
 
+}
+
+int Hash::getCost(string value){
+  item *current;
+  int index = hashValue(value);
+  current = hashTable[index];
+  while(current != nullptr){
+    if(current->value == value){
+      return current->cost;
+    }
+    current = current->next;
+  }
+  return -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

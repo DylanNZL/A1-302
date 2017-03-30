@@ -260,7 +260,7 @@ int main( int argc, char* argv[] ){
    //~ cout << "=========<< SEARCH ALGORITHMS >>=========" << endl;
 	if(argc < 5){
 		cout << "SYNTAX: main.exe <TYPE_OF_RUN = \"batch_run\" or \"single_run\"> ALGORITHM_NAME \"INITIAL STATE\" \"GOAL STATE\" " << endl;
-		exit(0);
+        exit(0);
 	}
   // for testing only
   cout << "Parameters supplied" << endl;
