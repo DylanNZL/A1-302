@@ -615,13 +615,17 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
 
     Heap H;
     Puzzle *temp_puzzle = new Puzzle(initialState, goalState);
+    temp_puzzle->updateHCost(heuristic);
+    temp_puzzle->updateFCost();
+
     H.insertIntoHeap(*temp_puzzle);
-    vector<string> e_list;
+    Hash e_list;
     int loop = 0;
 
     while(!H.isEmpty()){
 
-
+      Puzzle newP = H.deleteFromHeap();
+      e_list.addValue(newP.strBoard);
 
 
       if(temp_puzzle->canMoveUp() && temp_puzzle->getLastDirec() != 'D'){
