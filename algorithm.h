@@ -59,15 +59,13 @@ private:
     item *next;
   };
   item *hashTable[tableSize];
-  
   int hashValue(string key);
-
 public:
   Hash();
 	bool addValue (string value);
   bool valueExists(string value);
 	bool deleteValue(string value);
-
+  void print();
 };
 
 string hash(string toHash);

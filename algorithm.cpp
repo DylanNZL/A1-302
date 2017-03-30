@@ -166,7 +166,6 @@ bool Heap::isEmpty(){
  // TODO: Alex
  // Hash function
 Hash::Hash(){
-	
 	for(int i =0;i<tableSize;++i){
 		hashTable[i] = new item;
 		hashTable[i]->value = "";
@@ -176,46 +175,37 @@ Hash::Hash(){
 }
 
 int Hash::hashValue(string key){
-	int total = 0;
-	string temp ="";
-	for(int i =0;i<key.length();++i){
-		if(key[i] !='0'){
-			temp = temp+key[i];
-		}
-	}
 	int hash=1;
 	int num=0;
 	for(int i =0;i<3;++i){
 		for(int j =0;j<3;++j){
-			num+=(int)temp[j];
+			num+=(int)key[((i+1)*(j+1))-1];
 		}
 		hash*= num;
 		num = 0;
 	}
-	
 	hash%=tableSize;
 	return hash;
 }
 
 bool Hash::addValue(string value){
   int index = hashValue(value);
+  cout<<value<<": "<<index<<endl;
 	
 	if(hashTable[index]->value==""){
 		hashTable[index]->value = value;
 		return true;
 	}
-	
-	item* current = hashTable[index]->next;
-	if(current->value == value){
-		return false;
-	}
-	while(current!=nullptr){
-		current = current->next;
+	item* current = hashTable[index];
+	while(current->next!=nullptr){
 		if(current->value == value){
 			return false;
 		}
+    current = current->next;
 	}
-	
+  if(current->value == value){
+      return false;
+  }
 	item* newItem = new item;
 	current->next = newItem;
 	newItem->value = value;
@@ -228,14 +218,13 @@ bool Hash::valueExists(string value){
 	int index = hashValue(value);
 	item* current = hashTable[index];
 	while(current!=nullptr){
-		current = current->next;
 		if(current->value == value){
 			return true;
 		}
+    current = current->next;
 	}
   return false;
 }
-
 
 bool Hash::deleteValue(string value){
 	int index = hashValue(value);
@@ -266,6 +255,35 @@ bool Hash::deleteValue(string value){
 		current = current->next;
 	}
   return false;
+}
+
+//Print function will print each value in the Hash Table
+void Hash::print(){
+  item* current;
+  int temp = 0;
+  for(int i=0;i<tableSize;++i){
+
+    if(hashTable[i]->value!=""){
+      temp = 0;
+      cout<<"==================="<<endl;
+      cout<<"Index: "<<i<<":"<<endl;
+      cout<<"Node "<<temp<<endl;
+      cout<<hashTable[i]->value<<endl;
+      cout<<"==================="<<endl;
+      current = hashTable[i]->next;
+
+      while(current!=nullptr){
+        ++temp;
+        cout<<"==================="<<endl;
+        cout<<"Index: "<<i<<":"<<endl;
+        cout<<"Node "<<temp<<endl;
+        cout<<current->value<<endl;
+        cout<<"==================="<<endl;
+        current = current->next;
+      }
+    }
+  }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
