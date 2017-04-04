@@ -12,19 +12,25 @@ Num Of State Expansions:  2342
 Max Q Length:             1572
 Actual Running Time:      0.016000
 ================================================================================
-BFS w/ Visited List
+BFS w/ Visited List (vector)
 --------------------------------------------------------------------------------
 Path Length:              12
 Num Of State Expansions:  1682
 Max Q Length:             965
 Actual Running Time:      0.079000
+BFS w/ Visited List (vector)
+--------------------------------------------------------------------------------
+Path Length:
+Num Of State Expansions:
+Max Q Length:
+Actual Running Time:      
 ================================================================================
 PDS
 --------------------------------------------------------------------------------
 Path Length:              12
 Num Of State Expansions:  4144
 Max Q Length:             12
-Actual Running Time:      0.000000 ?? Might be right records 1.1s for test 2 but alg 1 gets 0.9s on test 2
+Actual Running Time:      0.000000
 ================================================================================
 PDS w/ non strict visited list
 --------------------------------------------------------------------------------

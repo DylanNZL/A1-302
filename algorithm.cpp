@@ -166,7 +166,7 @@ bool Heap::isEmpty(){
  // TODO: Alex
  // Hash function
 Hash::Hash(){
-	for(int i =0;i<tableSize;++i){
+	for(int i = 0; i < tableSize; ++i) {
 		hashTable[i] = new item;
 		hashTable[i]->value = "";
 		hashTable[i]->cost = -1;
@@ -176,9 +176,9 @@ Hash::Hash(){
 
 Hash::~Hash(){
   item *current, *temp;
-  for(int i =0; i<tableSize;++i){
+  for(int i = 0; i < tableSize; ++i) {
     current = hashTable[i];
-    while(current!=nullptr){
+    while(current != nullptr){
       temp = current;
       current = current->next;
       delete temp;
@@ -189,8 +189,8 @@ Hash::~Hash(){
 int Hash::hashValue(string key){
 	int hash=1;
 	int num=0;
-	for(int i =0;i<3;++i){
-		for(int j =0;j<3;++j){
+	for(int i = 0; i < 3; ++i){
+		for(int j = 0; j < 3; ++j){
 			num+=(int)key[((i+1)*(j+1))-1];
 		}
 		hash*= num;
@@ -208,7 +208,7 @@ bool Hash::addValue(string value, int cost){
 		return true;
 	}
 	item* current = hashTable[index];
-	while(current->next!=nullptr){
+	while(current->next != nullptr){
 		if(current->value == value){
 			return false;
 		}
@@ -222,7 +222,6 @@ bool Hash::addValue(string value, int cost){
 	newItem->value = value;
   newItem->cost = cost;
 	newItem->next = nullptr;
-	
   return true;
 }
 
@@ -240,10 +239,10 @@ bool Hash::valueExists(string value){
 
 bool Hash::deleteValue(string value, int cost){
 	int index = hashValue(value);
-	
+
 	item* current = hashTable[index];
 	item* temp = nullptr;
-	
+
 	if(current->value==value && current->cost==cost){
 		if(current->next==nullptr){
 			current->value="";
@@ -275,9 +274,9 @@ bool Hash::deleteValue(string value, int cost){
 void Hash::print(){
   item* current;
   int temp = 0;
-  for(int i=0;i<tableSize;++i){
+  for(int i = 0; i < tableSize; ++i) {
 
-    if(hashTable[i]->value!=""){
+    if(hashTable[i]->value != "") {
       temp = 0;
       cout<<"==================="<<endl;
       cout<<"Index: "<<i<<":"<<endl;
@@ -303,7 +302,6 @@ void Hash::print(){
       }
     }
   }
-
 }
 
 int Hash::getCost(string value){
@@ -399,7 +397,7 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 	  clock_t startTime;
     //add necessary variables here
     Queue Q;
-    vector<string> visited;
+    Hash H;
     //algorithm implementation
 	  cout << "------------------------------" << endl;
     cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
@@ -419,30 +417,26 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 
       if (temp->canMoveUp() && temp->getPath()[temp->getPathLength() - 1] != 'D') {
         Puzzle *p = temp->moveUp();
-        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
+        if (H.addValue(p->getString())) {
           Q.addToBack(p);
-          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveRight() && temp->getPath()[temp->getPathLength() - 1] != 'L') {
         Puzzle *p = temp->moveRight();
-        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
+        if (H.addValue(p->getString())) {
           Q.addToBack(p);
-          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveDown() && temp->getPath()[temp->getPathLength() - 1] != 'U') {
         Puzzle *p = temp->moveDown();
-        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
+        if (H.addValue(p->getString())) {
           Q.addToBack(p);
-          visited.push_back(p->strBoard);
         }
       }
       if (temp->canMoveLeft() && temp->getPath()[temp->getPathLength() - 1] != 'R') {
         Puzzle *p = temp->moveLeft();
-        if (find(visited.begin(), visited.end(), p->strBoard) == visited.end()) {
+        if (H.addValue(p->getString())) {
           Q.addToBack(p);
-          visited.push_back(p->strBoard);
         }
       }
       delete temp;
