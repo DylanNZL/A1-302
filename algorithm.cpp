@@ -208,14 +208,26 @@ bool Hash::addValue(string value, int cost){
 		return true;
 	}
 	item* current = hashTable[index];
-	while(current->next != nullptr){
-		if(current->value == value){
-			return false;
-		}
+  while (current->next != nullptr) {
+    if (current->value == value) {
+      if (current->cost > cost) {
+        current->cost = cost;
+        return true;
+      } else if (current->cost == cost) {
+        return true;
+      }
+		  return false;
+    }
     current = current->next;
-	}
-  if(current->value == value){
-      return false;
+  }
+  if (current->value == value){
+    if (current->cost > cost) {
+      current->cost = cost;
+      return true;
+    } else if (current->cost == cost){
+      return true;
+    }
+    return false;
   }
 	item* newItem = new item;
 	current->next = newItem;
@@ -497,10 +509,6 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
             Q.addToFront(OP->moveLeft());
         }
         OP->updateDepth();
-        /*if (loop % 1000000 == 0) {
-          cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " depth: " << depth << " current path = " << OP->getPath() << " data is " << OP->toString() << endl;
-          //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
-        }*/
         delete OP;
         if (Q.isEmpty()) {
             depth++;
@@ -533,13 +541,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
     maxQLength = 1;
     int depth = 1, loop = 0;
     Queue Q;
-
-    //vector<visited> v;
-
-    struct visited {
-        int vDepth = 0;
-        string vData;
-    };
+    Hash H;
 
     // visited list with depths assosiated
 	  cout << "------------------------------" << endl;
@@ -555,25 +557,28 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
         }
         //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << OP->getPath() << " data is " << OP->toString() << endl;
         if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
-            /*if (find(v.begin(), v.end(), OP->toString()) == v.end()) {
-              if (OP->getDepth() < v.vDepth) {
-                Q.addToFront(OP->moveUp());
-              }
-            }*/
+            Puzzle *temp = OP->moveUp();
+            if (H.addValue(temp->toString(), temp->getDepth())) {
+                Q.addToFront(temp);
+            }
         }
         if (OP->canMoveRight(depth) && OP->getPath()[OP->getPathLength() - 1] != 'L') {
-            Q.addToFront(OP->moveRight());
+            Puzzle *temp = OP->moveRight();
+            if (H.addValue(temp->toString(), temp->getDepth())) {
+                Q.addToFront(temp);
+            }
         }
         if (OP->canMoveDown(depth) && OP->getPath()[OP->getPathLength() - 1] != 'U') {
-            Q.addToFront(OP->moveDown());
+            Puzzle *temp = OP->moveDown();
+            if (H.addValue(temp->toString(), temp->getDepth())) {
+                Q.addToFront(temp);
+            }
         }
         if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
-            Q.addToFront(OP->moveLeft());
-        }
-        OP->updateDepth();
-        if (loop % 1000000 == 0) {
-          cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " depth: " << depth << " current path = " << OP->getPath() << " data is " << OP->toString() << endl;
-          //cout << "Solving equation... currently at state number: " << loop << " and depth: " << depth << endl;
+            Puzzle *temp = OP->moveLeft();
+            if (H.addValue(temp->toString(), temp->getDepth())) {
+                Q.addToFront(temp);
+            }
         }
         delete OP;
         loop++;
@@ -586,7 +591,10 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
     }
 //***********************************************************************************************************
     actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-    path = "DDRRLLLUUU"; //this is just a dummy path for testing the function
+    maxQLength = Q.getMax();
+    numOfStateExpansions = loop;
+    if (OP->goalMatch()) { path = OP->getPath(); }
+    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
 	  return path;
 }
 
