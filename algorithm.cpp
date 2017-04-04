@@ -210,23 +210,23 @@ bool Hash::addValue(string value, int cost){
 	item* current = hashTable[index];
   while (current->next != nullptr) {
     if (current->value == value) {
-      if (current->cost > cost) {
+      /*if (current->cost > cost) {
         current->cost = cost;
         return true;
       } else if (current->cost == cost) {
         return true;
-      }
+      }*/
 		  return false;
     }
     current = current->next;
   }
-  if (current->value == value){
+  if (current->value == value){/*
     if (current->cost > cost) {
       current->cost = cost;
       return true;
     } else if (current->cost == cost){
       return true;
-    }
+    }*/
     return false;
   }
 	item* newItem = new item;
