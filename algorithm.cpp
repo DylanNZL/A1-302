@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm> // check if vector contains a state
 #include <vector> // for visited list
+#include <iostream>
 
 using namespace std;
 
@@ -73,98 +74,119 @@ int Queue::getCount() { return count; }
 
 int Queue::getMax() { return max; }
 
-// Heap Definitions
+//===================================================
+//                Heap Definitions
+//===================================================
 Heap::Heap() {
   last = -1;
   max = -1;
 }
 
-Heap::~Heap() {
+void Heap::insertIntoHeap(Puzzle *mData){
+  ++last;
+  data.push_back(mData);
+  if(last == 0){ return; }
+  int swappingIndex = last, parentIndex;
+  bool swapping = true;
+  while(swapping){
+    swapping = false;
+    if(swappingIndex%2 == 0){
+      parentIndex = (swappingIndex/2) - 1;
+    }else{
+      parentIndex = (swappingIndex / 2);
+    }
+    if(parentIndex>=0){
+      if(heapCompare(data[parentIndex], data[swappingIndex])){
+        swap(data[swappingIndex], data[parentIndex]);
+        swapping = true;
+        swappingIndex = parentIndex;
+    
+      }
+    }
+  }
 }
 
-void Heap::insertIntoHeap(Puzzle mData) {
-   last++;
-   // What to do with count & max?
-   data.at(last) = mData;
-   // First value in vector
-   if (last == 0) { return; }
-   int swappingIndex = last, parentIndex;
-   bool swapping = true;
-   while (swapping) {
-     swapping = false;
-     // Find which side it is
-     if (swappingIndex % 2 == 0) {
-       parentIndex = (swappingIndex / 2) - 1; // right
-     } else {
-       parentIndex = (swappingIndex / 2); // left
-     }
-     // do the swap if needed
-     if (parentIndex >= 0) {
-       // Check if the swappingIndex should be higher in the tree
-       if (heapCompare(data.at(parentIndex), data.at(swappingIndex))) {
-         Puzzle temp = data[swappingIndex];
-         data.at(swappingIndex) = data.at(parentIndex);
-         data.at(parentIndex) = temp;
-         swapping = true;
-         swappingIndex = parentIndex;
-       }
-     }
-   }
+void Heap::deleteRoot(){
+  if(last<0){return;}
+  Puzzle * deletedValue = data[0];
+  data[0] = data[last];
+  data.pop_back();
+  --last;
+  int parIndex = 0, leftIndex = 1, rightIndex = 2;
+  bool swapping = true;
+
+  while((heapCompare(data[parIndex], data[leftIndex]) || (heapCompare(data[parIndex], data[rightIndex]))) && swapping){
+    swapping = false;
+    if(heapCompare(data[rightIndex], data[leftIndex])){
+      swap(data[leftIndex], data[parIndex]);
+      parIndex = leftIndex;
+      swapping = true;
+    } else {
+      swap(data[rightIndex], data[parIndex]);
+      parIndex = rightIndex;
+      swapping = true;
+    }
+    leftIndex = parIndex*2+1;
+    rightIndex = parIndex*2+2;
+    if(leftIndex>last){ break; }
+    else{
+      if(rightIndex>last){
+        if(heapCompare(data[parIndex], data[leftIndex])){
+          swap(data[parIndex], data[leftIndex]);
+        }
+        break;
+      }
+    }
+  } 
+  return;
 }
 
-Puzzle Heap::deleteFromHeap() {
-   if (last == 0) { last--; return data.at(0); }
-
-   // Save deleted root and move the last value in tree to the root
-   Puzzle deleted = data.at(0);
-   data.at(0) = data.at(last);
-   data.at(last) = Puzzle("0","0"); last--;
-
-   // Resort tree
-   int leftIndex, rightIndex, parentIndex = 0;
-   bool swapping = true;
-   while (swapping) {
-     swapping = false;
-     leftIndex = (parentIndex * 2) + 1;
-     rightIndex = (parentIndex * 2) + 2;
-
-     Puzzle temp = data.at(parentIndex);
-
-     // Check if left or right is bigger than parent
-     if (heapCompare(data.at(parentIndex), data.at(leftIndex)) || heapCompare(data.at(parentIndex), data.at(rightIndex))) {
-       swapping = true;
-       // right is bigger
-       if (heapCompare(data.at(leftIndex), data.at(rightIndex))) {
-         data.at(parentIndex) = data.at(rightIndex);
-         data.at(rightIndex) = temp;
-         parentIndex = rightIndex;
-       }
-       //  left is bigger
-       else {
-         data.at(parentIndex) = data.at(leftIndex);
-         data.at(leftIndex) = temp;
-         parentIndex = leftIndex;
-       }
-     }
-   }
+void Heap::print(){
+  for(int i = 0; i< data.size();++i){
+    cout<<data[i]->getFCost()<<": "<<data[i]->getString()<<endl;
+  }
+  return;
 }
 
 bool Heap::isEmpty(){
-  if (last<0){
-    return true;
-  }
+  if(last<0){ return true; }
   return false;
 }
 
- // Comapare two strings and return true if two should be higher in the tree than one
- // TODO: Dylan
- bool Heap::heapCompare(Puzzle one, Puzzle two) {
-   if (one.getFCost() < two.getFCost()) return true;
-   return false;
- }
+bool Heap::heapCompare(Puzzle* one, Puzzle* two){
+  if(one->getFCost() > two->getFCost()) {return true;}
+  return false;
+}
 
+int Heap::getIndex(Puzzle *mData){
+  for(int i = 0;i<data.size();++i){
+    if((data[i]->getString() == mData->getString()) && (data[i]->getFCost() == mData->getFCost())){
+      return i;
+    }
+  }
+  return -1;
+}
+
+bool Heap::deleteValue(Puzzle *dPuzzle){
+  int index = getIndex(dPuzzle);
+  if(index == -1){return false;}
+  vector<Puzzle*> newData = data;
+  newData.erase(newData.begin() + index);
+  data.clear();
+  last = 0;
+  for(int i = 0;i<newData.size();++i){
+    insertIntoHeap(newData[i]);
+  }
+  newData.clear();
+
+  return true;
+
+}
+
+//=================================================
  // TODO: Alex
  // Hash function
+//=================================================
 Hash::Hash(){
 	for(int i = 0; i < tableSize; ++i) {
 		hashTable[i] = new item;
@@ -620,14 +642,12 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     temp_puzzle->updateHCost(heuristic);
     temp_puzzle->updateFCost();
 
-    H.insertIntoHeap(*temp_puzzle);
+    H.insertIntoHeap(temp_puzzle);
     Hash e_list;
     int loop = 0;
 
     while(!H.isEmpty()){
 
-      Puzzle newP = H.deleteFromHeap();
-      e_list.addValue(newP.strBoard);
 
 
       if(temp_puzzle->canMoveUp() && temp_puzzle->getLastDirec() != 'D'){
