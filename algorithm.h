@@ -50,6 +50,7 @@ public:
   void deleteRoot();
   bool deleteValue(Puzzle *dPuzzle);
   void print();
+  Puzzle* getFront();
   int getMax() { return max; }
 };
 
