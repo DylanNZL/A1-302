@@ -84,6 +84,9 @@ Heap::Heap() {
 
 void Heap::insertIntoHeap(Puzzle *mData){
   ++last;
+  if(last>max){
+    max = last;
+  }
   data.push_back(mData);
   if(last == 0){ return; }
   int swappingIndex = last, parentIndex;
@@ -112,10 +115,9 @@ void Heap::deleteRoot(){
   data[0] = data[last];
   data.pop_back();
   --last;
-  if(last<0){return;}
+  if(last<=0){return;}
   int parIndex = 0, leftIndex = 1, rightIndex = 2;
   bool swapping = true;
-cout<<"TEST"<<endl;
   while((heapCompare(data[parIndex], data[leftIndex]) || (heapCompare(data[parIndex], data[rightIndex]))) && swapping){
     swapping = false;
     if(heapCompare(data[rightIndex], data[leftIndex])){
@@ -187,6 +189,27 @@ bool Heap::deleteValue(Puzzle *dPuzzle){
 Puzzle* Heap::getFront(){
   if(last<0){return nullptr;}
   return data[0];
+}
+
+bool Heap::replaceAndInsert(Puzzle *mPuzzle){
+  
+  bool puzzle_deleted = false;
+  for(int i = 0;i<data.size();++i){
+    if((data[i]->toString() == mPuzzle->toString()) &&  (mPuzzle->getFCost() < data[i]->getFCost()) ){
+      puzzle_deleted = true;
+      vector<Puzzle*> newData = data;
+      newData.erase(newData.begin() + i);
+      data.clear();
+      last = 0;
+      for(int i = 0;i<newData.size();++i){
+        insertIntoHeap(newData[i]);
+      }
+      newData.clear();
+      break;
+    }
+  }
+  insertIntoHeap(mPuzzle);
+  return puzzle_deleted;
 }
 
 //=================================================
@@ -648,62 +671,83 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     Hash e_list;
 
     Puzzle *OP = new Puzzle(initialState, goalState);
-
     OP->updateHCost(heuristic);
-
     OP->updateFCost();
-
-
     H.insertIntoHeap(OP);
     int loop = 0;
 
     while(!H.isEmpty()){
+      ++numOfAttemptedNodeReExpansions;
 
       OP = H.getFront();
+      cout<<"STRING: "<<OP->toString()<<endl;
       H.deleteRoot();
       
-      if(OP->goalMatch()){
+
+      if(OP->goalMatch() && H.isEmpty()){
         break;
       }
 
-      e_list.addValue(OP->toString());
+      if(e_list.addValue(OP->toString())){ //Node has not been expanded already
+        ++numOfStateExpansions;
+        if(OP->canMoveUp() && OP->getPath()[OP->getPathLength() - 1] != 'D'){
+          Puzzle *temp = OP->moveUp();
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+          //getchar();
+        }
+        
+        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){ //&& (OP->getLastDirec() != 'L')){
+          
+          Puzzle *temp = OP->moveRight();
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
 
-      if(OP->canMoveUp() && OP->getLastDirec() != 'D'){
-        Puzzle *temp = OP->moveUp();
-        temp->updateHCost(heuristic);
-        temp->updateFCost();
-        H.insertIntoHeap(temp);
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+          //getchar();
+        }
+        
+        if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){// && OP->getLastDirec() != 'U'){
+          Puzzle *temp = OP->moveDown();
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+          //getchar();
+        }
 
+        if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
+          Puzzle *temp = OP->moveLeft();
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+          //getchar();
+        }
 
-
-      }
-      if(OP->canMoveRight() && OP->getLastDirec() != 'L'){
-        Puzzle *temp = OP->moveRight();
-        temp->updateHCost(heuristic);
-        temp->updateFCost();
-        H.insertIntoHeap(temp);
-
-      }
-      if(OP->canMoveDown() && OP->getLastDirec() != 'U'){
-        Puzzle *temp = OP->moveDown();
-        temp->updateHCost(heuristic);
-        temp->updateFCost();
-        H.insertIntoHeap(temp);
-
-      }
-      if(OP->canMoveLeft() && OP->getLastDirec() != 'R'){
-        Puzzle *temp = OP->moveLeft();
-        temp->updateHCost(heuristic);
-        temp->updateFCost();
-        H.insertIntoHeap(temp);
-
+      } else{
+        ++numOfLocalLoopsAvoided;
       }
       delete OP;
       ++loop;
     } //H is empty
 
+
+
+    maxQLength = H.getMax();
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-    if (OP->goalMatch()) { path = OP->getPath(); }
-	  //path = "DDRRLLLUUU"; //this is just a dummy path for testing the function
+    if (OP->goalMatch()) { 
+      path = OP->getPath(); 
+    }else{
+      path = "DDRRLLLUUU";//this is just a dummy path for testing the function
+    }
+	   
 	  return path;
 }
