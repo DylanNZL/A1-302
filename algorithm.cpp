@@ -146,7 +146,7 @@ void Heap::deleteRoot(){
 
 void Heap::print(){
   for(int i = 0; i< data.size();++i){
-    cout<<data[i]->getFCost()<<": "<<data[i]->getString()<<endl;
+    data[i]->customPrint();
   }
   return;
 }
@@ -176,7 +176,7 @@ bool Heap::deleteValue(Puzzle *dPuzzle){
   vector<Puzzle*> newData = data;
   newData.erase(newData.begin() + index);
   data.clear();
-  last = 0;
+  last = -1;
   for(int i = 0;i<newData.size();++i){
     insertIntoHeap(newData[i]);
   }
@@ -202,6 +202,7 @@ bool Heap::replaceAndInsert(Puzzle *mPuzzle){
       data.clear();
       last = 0;
       for(int i = 0;i<newData.size();++i){
+
         insertIntoHeap(newData[i]);
       }
       newData.clear();
@@ -680,7 +681,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
       ++numOfAttemptedNodeReExpansions;
 
       OP = H.getFront();
-      cout<<"STRING: "<<OP->toString()<<endl;
+      //cout<<"STRING: "<<OP->toString()<<endl;
       H.deleteRoot();
       
 
@@ -699,7 +700,6 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           }
           //getchar();
         }
-        
         if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){ //&& (OP->getLastDirec() != 'L')){
           
           Puzzle *temp = OP->moveRight();
@@ -711,7 +711,6 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           }
           //getchar();
         }
-        
         if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){// && OP->getLastDirec() != 'U'){
           Puzzle *temp = OP->moveDown();
           temp->updateHCost(heuristic);
@@ -721,7 +720,6 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           }
           //getchar();
         }
-
         if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
           Puzzle *temp = OP->moveLeft();
           temp->updateHCost(heuristic);
@@ -731,7 +729,6 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           }
           //getchar();
         }
-
       } else{
         ++numOfLocalLoopsAvoided;
       }
