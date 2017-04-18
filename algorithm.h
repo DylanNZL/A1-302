@@ -40,10 +40,10 @@ class Heap {
 private:
   vector<Puzzle*> data;
   int last, max;
+  int getIndex(Puzzle *mData);
 public:
   Heap();
   ~Heap(){ data.clear(); };
-  int getIndex(Puzzle *mData);
   void insertIntoHeap(Puzzle *mData);
   bool isEmpty();
   bool heapCompare(Puzzle* one, Puzzle* two);

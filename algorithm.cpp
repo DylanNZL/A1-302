@@ -6,11 +6,11 @@
 
 using namespace std;
 
-/**
- * 6 & 1 might not work
- */
-// Queue Definitions
-// TODO: Dylan
+
+//======================================================================================================
+//                                              Queue Definitions
+//======================================================================================================
+
 
 Queue::Queue() {
   count = 0;  max = 0;
@@ -74,21 +74,30 @@ int Queue::getCount() { return count; }
 
 int Queue::getMax() { return max; }
 
-//===================================================
-//                Heap Definitions
-//===================================================
+//======================================================================================================
+//                                              Heap Definitions
+//======================================================================================================
+
+//This Heap uses the FCost of the Puzzles passed to it to determine order insuring that the Puzzle with the lowest FCost
+//Is always at the root of the heap.
+//This heap posseses the capacity to delete a Puzzle from any position within the heap and still remain valid
+//A vector is used to store the individual Puzzle pointers. 
+
+//Heap constructor sets last index and max size to -1
 Heap::Heap() {
   last = -1;
   max = -1;
 }
 
+//Function inserts a pointer to a Puzzle into a heap
 void Heap::insertIntoHeap(Puzzle *mData){
   ++last;
   if(last>max){
+    //set maximum size of heap;
     max = last;
   }
   data.push_back(mData);
-  if(last == 0){ return; }
+  if(last == 0){ return; } //first value added to the heap
   int swappingIndex = last, parentIndex;
   bool swapping = true;
   while(swapping){
@@ -109,13 +118,14 @@ void Heap::insertIntoHeap(Puzzle *mData){
   }
 }
 
+//Function deletes the smallest value in the heap
 void Heap::deleteRoot(){
-  if(last<0){return;}
+  if(last<0){ return; } //no value in the heap
   Puzzle * deletedValue = data[0];
   data[0] = data[last];
   data.pop_back();
   --last;
-  if(last<=0){return;}
+  if(last<=0){return;}//a single value remains meaning no shuffeling is required
   int parIndex = 0, leftIndex = 1, rightIndex = 2;
   bool swapping = true;
   while((heapCompare(data[parIndex], data[leftIndex]) || (heapCompare(data[parIndex], data[rightIndex]))) && swapping){
@@ -151,18 +161,23 @@ void Heap::print(){
   return;
 }
 
+//Function returns true if the heap is empty
 bool Heap::isEmpty(){
   if(last<0){ return true; }
   return false;
 }
 
+//Function returns true if the first Puzzle FCost is greater than or equal to the second Puzzle
 bool Heap::heapCompare(Puzzle* one, Puzzle* two){
   if(one->getFCost() >= two->getFCost()) {return true;}
   return false;
 }
 
+//Private function uses runs through the vector array and returns the index of the Puzzle
+//returns -1 if Puzzle cannot be found
 int Heap::getIndex(Puzzle *mData){
   for(int i = 0;i<data.size();++i){
+    //Find puzzle with same string and FCost
     if((data[i]->getString() == mData->getString()) && (data[i]->getFCost() == mData->getFCost())){
       return i;
     }
@@ -170,6 +185,8 @@ int Heap::getIndex(Puzzle *mData){
   return -1;
 }
 
+//Function deletes a Puzzle from inside the heap.
+//This is done by deleting the value from the vector and then rebuilding the heap in its entirety
 bool Heap::deleteValue(Puzzle *dPuzzle){
   int index = getIndex(dPuzzle);
   if(index == -1){return false;}
@@ -186,15 +203,21 @@ bool Heap::deleteValue(Puzzle *dPuzzle){
 
 }
 
+//Function returns front of the Heap
 Puzzle* Heap::getFront(){
   if(last<0){return nullptr;}
   return data[0];
 }
 
+//Function is passed a Puzzle. If that Puzzle exists with a lower FCost then the puzzle is deleted
+//This is done by deleting the value from the vector and then rebuilding the heap in its entirety
+//Returns true if a value has been deleted from the Heap otherwise returns False
+//**IMPORTANT NOTE**: Return value is not an idication of if the value has been added to the Heap only if a
+//value has been deleted off the heap
 bool Heap::replaceAndInsert(Puzzle *mPuzzle){
-  
   bool puzzle_deleted = false;
   for(int i = 0;i<data.size();++i){
+    //If a puzzle with a lower Fcost is found then delete the value
     if((data[i]->toString() == mPuzzle->toString()) &&  (mPuzzle->getFCost() < data[i]->getFCost()) ){
       puzzle_deleted = true;
       vector<Puzzle*> newData = data;
@@ -209,14 +232,16 @@ bool Heap::replaceAndInsert(Puzzle *mPuzzle){
       break;
     }
   }
+  //Once a value is deleted OR no value is found then insert the new Puzzle
   insertIntoHeap(mPuzzle);
   return puzzle_deleted;
 }
 
-//=================================================
- // TODO: Alex
- // Hash function
-//=================================================
+//======================================================================================================
+//                                              Hash Definitions
+//======================================================================================================
+
+//Hash constructor creates new items for the entire hash table
 Hash::Hash(){
 	for(int i = 0; i < tableSize; ++i) {
 		hashTable[i] = new item;
@@ -238,6 +263,11 @@ Hash::~Hash(){
   }
 }
 
+
+//Hash function uses the asci values of each character to create a key
+//Assuming string is an array named key the algorithm is:
+// value = (key[0]+key[1]+key[2])*(key[3]+key[4]+key[5])*(key[6]+key[7]+key[8])
+// value = value % tablesize
 int Hash::hashValue(string key){
 	int hash=1;
 	int num=0;
@@ -252,6 +282,8 @@ int Hash::hashValue(string key){
 	return hash;
 }
 
+//Function adds a value to hash table. If a value already exists in the table or cannot be added then the
+//function returns false 
 bool Hash::addValue(string value, int cost){
   if(valueExists(value)){
     return false;
@@ -292,6 +324,7 @@ bool Hash::addValue(string value, int cost){
   return true;
 }
 
+//Function returns true if a value exists in the hash
 bool Hash::valueExists(string value){
 	int index = hashValue(value);
 	item* current = hashTable[index];
@@ -304,6 +337,7 @@ bool Hash::valueExists(string value){
   return false;
 }
 
+//Function searches for the value input and deletes it from the hash
 bool Hash::deleteValue(string value, int cost){
 	int index = hashValue(value);
 
@@ -371,6 +405,8 @@ void Hash::print(){
   }
 }
 
+//Function getst the cost of an input string from the hash table
+//returns -1 if value is not found
 int Hash::getCost(string value){
   item *current;
   int index = hashValue(value);
