@@ -157,7 +157,7 @@ bool Heap::isEmpty(){
 }
 
 bool Heap::heapCompare(Puzzle* one, Puzzle* two){
-  if(one->getFCost() > two->getFCost()) {return true;}
+  if(one->getFCost() >= two->getFCost()) {return true;}
   return false;
 }
 
@@ -176,7 +176,7 @@ bool Heap::deleteValue(Puzzle *dPuzzle){
   vector<Puzzle*> newData = data;
   newData.erase(newData.begin() + index);
   data.clear();
-  last = -1;
+  last = 0;
   for(int i = 0;i<newData.size();++i){
     insertIntoHeap(newData[i]);
   }
@@ -200,7 +200,7 @@ bool Heap::replaceAndInsert(Puzzle *mPuzzle){
       vector<Puzzle*> newData = data;
       newData.erase(newData.begin() + i);
       data.clear();
-      last = 0;
+      last = -1;
       for(int i = 0;i<newData.size();++i){
 
         insertIntoHeap(newData[i]);
@@ -253,6 +253,9 @@ int Hash::hashValue(string key){
 }
 
 bool Hash::addValue(string value, int cost){
+  if(valueExists(value)){
+    return false;
+  }
   int index = hashValue(value);
 	if(hashTable[index]->value==""){
 		hashTable[index]->value = value;
@@ -675,7 +678,6 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     OP->updateHCost(heuristic);
     OP->updateFCost();
     H.insertIntoHeap(OP);
-    int loop = 0;
 
     while(!H.isEmpty()){
       ++numOfAttemptedNodeReExpansions;
@@ -684,15 +686,16 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
       //cout<<"STRING: "<<OP->toString()<<endl;
       H.deleteRoot();
       
-
-      if(OP->goalMatch() && H.isEmpty()){
-        break;
-      }
+      
 
       if(e_list.addValue(OP->toString())){ //Node has not been expanded already
         ++numOfStateExpansions;
         if(OP->canMoveUp() && OP->getPath()[OP->getPathLength() - 1] != 'D'){
           Puzzle *temp = OP->moveUp();
+          if(temp->goalMatch()){ 
+            OP = temp;
+            break;
+          }
           temp->updateHCost(heuristic);
           temp->updateFCost();
           if(H.replaceAndInsert(temp)){
@@ -703,6 +706,10 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){ //&& (OP->getLastDirec() != 'L')){
           
           Puzzle *temp = OP->moveRight();
+          if(temp->goalMatch()){ 
+            OP = temp;
+            break;
+          }
           temp->updateHCost(heuristic);
           temp->updateFCost();
 
@@ -713,6 +720,10 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         }
         if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){// && OP->getLastDirec() != 'U'){
           Puzzle *temp = OP->moveDown();
+          if(temp->goalMatch()){ 
+            OP = temp;
+            break;
+          }
           temp->updateHCost(heuristic);
           temp->updateFCost();
           if(H.replaceAndInsert(temp)){
@@ -722,6 +733,10 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         }
         if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
           Puzzle *temp = OP->moveLeft();
+          if(temp->goalMatch()){ 
+            OP = temp;
+            break;
+          }
           temp->updateHCost(heuristic);
           temp->updateFCost();
           if(H.replaceAndInsert(temp)){
@@ -733,9 +748,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         ++numOfLocalLoopsAvoided;
       }
       delete OP;
-      ++loop;
     } //H is empty
-
 
 
     maxQLength = H.getMax();
