@@ -10,8 +10,6 @@ using namespace std;
 //======================================================================================================
 //                                              Queue Definitions
 //======================================================================================================
-
-
 Queue::Queue() {
   count = 0;  max = 0;
   front = NULL; rear = NULL;
@@ -81,7 +79,7 @@ int Queue::getMax() { return max; }
 //This Heap uses the FCost of the Puzzles passed to it to determine order insuring that the Puzzle with the lowest FCost
 //Is always at the root of the heap.
 //This heap posseses the capacity to delete a Puzzle from any position within the heap and still remain valid
-//A vector is used to store the individual Puzzle pointers. 
+//A vector is used to store the individual Puzzle pointers.
 
 //Heap constructor sets last index and max size to -1
 Heap::Heap() {
@@ -112,7 +110,7 @@ void Heap::insertIntoHeap(Puzzle *mData){
         swap(data[swappingIndex], data[parentIndex]);
         swapping = true;
         swappingIndex = parentIndex;
-    
+
       }
     }
   }
@@ -150,7 +148,7 @@ void Heap::deleteRoot(){
         break;
       }
     }
-  } 
+  }
   return;
 }
 
@@ -244,7 +242,6 @@ Hash::~Hash(){
   }
 }
 
-
 //Hash function uses the asci values of each character to create a key
 //Assuming string is an array named key the algorithm is:
 // value = (key[0]+key[1]+key[2])*(key[3]+key[4]+key[5])*(key[6]+key[7]+key[8])
@@ -264,7 +261,7 @@ int Hash::hashValue(string key){
 }
 
 //Function adds a value to hash table. If a value already exists in the table or cannot be added then the
-//function returns false 
+//function returns false
 bool Hash::addValue(string value, int cost){
   if(valueExists(value)){
     return false;
@@ -407,33 +404,21 @@ int Hash::getCost(string value){
 //
 // Move Generator:
 //
-/**
- * Steps:
- * 1. Initialise Q with search node (S) as only entry; set Visited = (S).​
- * 2. If Q is empty, fail.  Else, pick FIRST node N from Q.​
- * 3. If state (N) is a goal, return N (we’ve reached the goal).​
- * 4. (Otherwise) Remove N from Q.
- * 5. Find all the descendants of state (N) not in Visited and create all the one-step extensions of N to each descendant.
- * 6. Add the extended paths to END of Q; add children of state (N) to Visited.
- * 7. Go to Step 2
- * Up, Right, Down, then Left
- */
  ////////////////////////////////////////////////////////////////////////////////////////////
  string breadthFirstSearch(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime) {
     string path;
 	  clock_t startTime;
     //add necessary variables here
     Queue Q;
+    maxQLength = 0;
+    int loop = 0;
+    Puzzle * temp = new Puzzle(initialState, goalState);
     //algorithm implementation
 	  cout << "------------------------------" << endl;
     cout << "<<breadthFirstSearch>>" << endl;
     cout << "------------------------------" << endl;
-
 	  startTime = clock();
-	  maxQLength = 0;
-    Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int loop = 1;
     while (!Q.isEmpty()) {
       loop++;
       temp = Q.leave();
@@ -455,14 +440,10 @@ int Hash::getCost(string value){
         Q.addToBack(temp->moveLeft());
       }
       delete temp;
-      // DEBUG:
-      /*if (loop % 10000 == 0) {
-        cout << "state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
-      }*/
   }
 //***********************************************************************************************************
     if (temp->goalMatch()) { path = temp->getPath(); }
-    else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     numOfStateExpansions = loop;
     maxQLength = Q.getMax();
@@ -482,16 +463,15 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
     //add necessary variables here
     Queue Q;
     Hash H;
+    maxQLength = 0;
+    int loop = 0;
+    Puzzle * temp = new Puzzle(initialState, goalState);
     //algorithm implementation
 	  cout << "------------------------------" << endl;
     cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
     cout << "------------------------------" << endl;
-
 	  startTime = clock();
-	  maxQLength = 1;
-    Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int loop = 1;
     while (!Q.isEmpty()) {
       loop++;
       temp = Q.leave();
@@ -501,39 +481,26 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 
       if (temp->canMoveUp() && temp->getPath()[temp->getPathLength() - 1] != 'D') {
         Puzzle *p = temp->moveUp();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveRight() && temp->getPath()[temp->getPathLength() - 1] != 'L') {
         Puzzle *p = temp->moveRight();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveDown() && temp->getPath()[temp->getPathLength() - 1] != 'U') {
         Puzzle *p = temp->moveDown();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveLeft() && temp->getPath()[temp->getPathLength() - 1] != 'R') {
         Puzzle *p = temp->moveLeft();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       delete temp;
-      // DEBUG:
-    /*  if (loop % 1000 == 0) {
-        cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
-      }
-      */
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     if (temp->goalMatch()) { path = temp->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
     numOfStateExpansions = loop;
     maxQLength = Q.getMax();
 	  return path;
@@ -595,7 +562,7 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     maxQLength = Q.getMax();
     numOfStateExpansions = loop;
     if (OP->goalMatch()) { path = OP->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  return path;
 }
 
@@ -666,7 +633,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
     maxQLength = Q.getMax();
     numOfStateExpansions = loop;
     if (OP->goalMatch()) { path = OP->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  return path;
 }
 
@@ -699,16 +666,16 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
       //Get the smalest value in the heap
       OP = H.getFront();
       H.deleteRoot();
-      
+
       ++numOfAttemptedNodeReExpansions;
       //Try to add a state into the expanded list. If the value is successfully added then carry out the expansions
-      if(e_list.addValue(OP->toString())){ 
+      if(e_list.addValue(OP->toString())){
         ++numOfStateExpansions;
 
         //Time moves up
         if(OP->canMoveUp() && OP->getPath()[OP->getPathLength() - 1] != 'D'){
           Puzzle *temp = OP->moveUp();
-          if(temp->goalMatch()){ 
+          if(temp->goalMatch()){
             OP = temp;
             break;
           }
@@ -720,9 +687,9 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         }
 
         //Tile moves right
-        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){  
+        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){
           Puzzle *temp = OP->moveRight();
-          if(temp->goalMatch()){ 
+          if(temp->goalMatch()){
             OP = temp;
             break;
           }
@@ -736,7 +703,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         //Tile moves down
         if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){
           Puzzle *temp = OP->moveDown();
-          if(temp->goalMatch()){ 
+          if(temp->goalMatch()){
             OP = temp;
             break;
           }
@@ -750,7 +717,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
         //Tile moves left
         if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
           Puzzle *temp = OP->moveLeft();
-          if(temp->goalMatch()){ 
+          if(temp->goalMatch()){
             OP = temp;
             break;
           }
@@ -763,19 +730,16 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
       } else{
         ++numOfLocalLoopsAvoided;
       }
-		
+
       delete OP;
     } //H is empty
 
-
-
     maxQLength = H.getMax();
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-    if (OP->goalMatch()) { 
-      path = OP->getPath(); 
+    if (OP->goalMatch()) {
+      path = OP->getPath();
     }else{
-      path = "DDRRLLLUUU";//this is just a dummy path for testing the function
+      path = ""; // Return empty path as no solution
     }
-	   
 	  return path;
 }
