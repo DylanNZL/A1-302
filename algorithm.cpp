@@ -173,33 +173,22 @@ bool Heap::heapCompare(Puzzle* one, Puzzle* two){
   return false;
 }
 
-//Private function uses runs through the vector array and returns the index of the Puzzle
-//returns -1 if Puzzle cannot be found
-int Heap::getIndex(Puzzle *mData){
-  for(int i = 0;i<data.size();++i){
-    //Find puzzle with same string and FCost
-    if((data[i]->getString() == mData->getString()) && (data[i]->getFCost() == mData->getFCost())){
-      return i;
-    }
-  }
-  return -1;
-}
-
 //Function deletes a Puzzle from inside the heap.
 //This is done by deleting the value from the vector and then rebuilding the heap in its entirety
-bool Heap::deleteValue(Puzzle *dPuzzle){
-  int index = getIndex(dPuzzle);
-  if(index == -1){return false;}
+void Heap::deleteValue(int index){
+  if(index == -1){
+    return;
+  }
   vector<Puzzle*> newData = data;
   newData.erase(newData.begin() + index);
   data.clear();
-  last = 0;
+  last = -1;
   for(int i = 0;i<newData.size();++i){
     insertIntoHeap(newData[i]);
   }
   newData.clear();
+  return;
 
-  return true;
 
 }
 
@@ -220,15 +209,7 @@ bool Heap::replaceAndInsert(Puzzle *mPuzzle){
     //If a puzzle with a lower Fcost is found then delete the value
     if((data[i]->toString() == mPuzzle->toString()) &&  (mPuzzle->getFCost() < data[i]->getFCost()) ){
       puzzle_deleted = true;
-      vector<Puzzle*> newData = data;
-      newData.erase(newData.begin() + i);
-      data.clear();
-      last = -1;
-      for(int i = 0;i<newData.size();++i){
-
-        insertIntoHeap(newData[i]);
-      }
-      newData.clear();
+      deleteValue(i);
       break;
     }
   }
@@ -701,31 +682,30 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     cout << "------------------------------" << endl;
     cout << "<<aStar_ExpandedList>>" << endl;
     cout << "------------------------------" << endl;
-
 	  actualRunningTime = 0.0;
 	  startTime = clock();
 	  maxQLength = 0;
 //***********************************************************************************************************
-
     Heap H;
     Hash e_list;
-
     Puzzle *OP = new Puzzle(initialState, goalState);
     OP->updateHCost(heuristic);
     OP->updateFCost();
+    //Add the opening value onto the heap
     H.insertIntoHeap(OP);
 
+    //Loop until the heap is empty
     while(!H.isEmpty()){
-      ++numOfAttemptedNodeReExpansions;
-
+      //Get the smalest value in the heap
       OP = H.getFront();
-      //cout<<"STRING: "<<OP->toString()<<endl;
       H.deleteRoot();
       
-      
-
-      if(e_list.addValue(OP->toString())){ //Node has not been expanded already
+      ++numOfAttemptedNodeReExpansions;
+      //Try to add a state into the expanded list. If the value is successfully added then carry out the expansions
+      if(e_list.addValue(OP->toString())){ 
         ++numOfStateExpansions;
+
+        //Time moves up
         if(OP->canMoveUp() && OP->getPath()[OP->getPathLength() - 1] != 'D'){
           Puzzle *temp = OP->moveUp();
           if(temp->goalMatch()){ 
@@ -737,10 +717,10 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           if(H.replaceAndInsert(temp)){
             ++numOfDeletionsFromMiddleOfHeap;
           }
-          //getchar();
         }
-        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){ //&& (OP->getLastDirec() != 'L')){
-          
+
+        //Tile moves right
+        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){  
           Puzzle *temp = OP->moveRight();
           if(temp->goalMatch()){ 
             OP = temp;
@@ -748,13 +728,13 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           }
           temp->updateHCost(heuristic);
           temp->updateFCost();
-
           if(H.replaceAndInsert(temp)){
             ++numOfDeletionsFromMiddleOfHeap;
           }
-          //getchar();
         }
-        if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){// && OP->getLastDirec() != 'U'){
+
+        //Tile moves down
+        if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){
           Puzzle *temp = OP->moveDown();
           if(temp->goalMatch()){ 
             OP = temp;
@@ -765,8 +745,9 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           if(H.replaceAndInsert(temp)){
             ++numOfDeletionsFromMiddleOfHeap;
           }
-          //getchar();
         }
+
+        //Tile moves left
         if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
           Puzzle *temp = OP->moveLeft();
           if(temp->goalMatch()){ 
@@ -778,13 +759,18 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
           if(H.replaceAndInsert(temp)){
             ++numOfDeletionsFromMiddleOfHeap;
           }
-          //getchar();
         }
       } else{
         ++numOfLocalLoopsAvoided;
       }
+
+
+    if(loop%1000 == 0){
+      cout<<numOfLocalLoopsAvoided<<endl;
+    }
       delete OP;
     } //H is empty
+
 
 
     maxQLength = H.getMax();

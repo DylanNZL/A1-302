@@ -40,7 +40,7 @@ class Heap {
 private:
   vector<Puzzle*> data;
   int last, max;
-  int getIndex(Puzzle *mData);
+  void deleteValue(int index);
 public:
   Heap();
   ~Heap(){ data.clear(); };
@@ -48,7 +48,6 @@ public:
   bool isEmpty();
   bool heapCompare(Puzzle* one, Puzzle* two);
   void deleteRoot();
-  bool deleteValue(Puzzle *dPuzzle);
   void print();
   Puzzle* getFront();
   int getMax() { return max; }
