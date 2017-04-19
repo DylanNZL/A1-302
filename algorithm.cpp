@@ -763,11 +763,7 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
       } else{
         ++numOfLocalLoopsAvoided;
       }
-
-
-    if(loop%1000 == 0){
-      cout<<numOfLocalLoopsAvoided<<endl;
-    }
+		
       delete OP;
     } //H is empty
 
