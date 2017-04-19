@@ -263,9 +263,11 @@ int Hash::hashValue(string key){
 //Function adds a value to hash table. If a value already exists in the table or cannot be added then the
 //function returns false
 bool Hash::addValue(string value, int cost){
-  if(valueExists(value)){
-    return false;
-  }
+	if(cost==-1){
+		if(valueExists(value)){
+			return false;
+		}
+	}
   int index = hashValue(value);
 	if(hashTable[index]->value==""){
 		hashTable[index]->value = value;
