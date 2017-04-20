@@ -38,16 +38,20 @@ public:
 // A*
 class Heap {
 private:
-  vector<Puzzle> data;
+  vector<Puzzle*> data;
   int last, max;
+  void deleteValue(int index);
 public:
   Heap();
-  ~Heap();
-  void insertIntoHeap(Puzzle mData);
+  ~Heap(){ data.clear(); };
+  void insertIntoHeap(Puzzle *mData);
   bool isEmpty();
-  Puzzle deleteFromHeap();
-  bool heapCompare(Puzzle one, Puzzle two);
+  bool heapCompare(Puzzle* one, Puzzle* two);
+  void deleteRoot();
+  void print();
+  Puzzle* getFront();
   int getMax() { return max; }
+  bool replaceAndInsert(Puzzle *mPuzzle);
 };
 
 class Hash{

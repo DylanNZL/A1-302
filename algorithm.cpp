@@ -2,15 +2,14 @@
 #include <string>
 #include <algorithm> // check if vector contains a state
 #include <vector> // for visited list
+#include <iostream>
 
 using namespace std;
 
-/**
- * 6 & 1 might not work
- */
-// Queue Definitions
-// TODO: Dylan
 
+//======================================================================================================
+//                                              Queue Definitions
+//======================================================================================================
 Queue::Queue() {
   count = 0;  max = 0;
   front = NULL; rear = NULL;
@@ -73,98 +72,155 @@ int Queue::getCount() { return count; }
 
 int Queue::getMax() { return max; }
 
-// Heap Definitions
+//======================================================================================================
+//                                              Heap Definitions
+//======================================================================================================
+
+//This Heap uses the FCost of the Puzzles passed to it to determine order insuring that the Puzzle with the lowest FCost
+//Is always at the root of the heap.
+//This heap posseses the capacity to delete a Puzzle from any position within the heap and still remain valid
+//A vector is used to store the individual Puzzle pointers.
+
+//Heap constructor sets last index and max size to -1
 Heap::Heap() {
   last = -1;
   max = -1;
 }
 
-Heap::~Heap() {
-}
-
-void Heap::insertIntoHeap(Puzzle mData) {
-   last++;
-   // What to do with count & max?
-   data.at(last) = mData;
-   // First value in vector
-   if (last == 0) { return; }
-   int swappingIndex = last, parentIndex;
-   bool swapping = true;
-   while (swapping) {
-     swapping = false;
-     // Find which side it is
-     if (swappingIndex % 2 == 0) {
-       parentIndex = (swappingIndex / 2) - 1; // right
-     } else {
-       parentIndex = (swappingIndex / 2); // left
-     }
-     // do the swap if needed
-     if (parentIndex >= 0) {
-       // Check if the swappingIndex should be higher in the tree
-       if (heapCompare(data.at(parentIndex), data.at(swappingIndex))) {
-         Puzzle temp = data[swappingIndex];
-         data.at(swappingIndex) = data.at(parentIndex);
-         data.at(parentIndex) = temp;
-         swapping = true;
-         swappingIndex = parentIndex;
-       }
-     }
-   }
-}
-
-Puzzle Heap::deleteFromHeap() {
-   if (last == 0) { last--; return data.at(0); }
-
-   // Save deleted root and move the last value in tree to the root
-   Puzzle deleted = data.at(0);
-   data.at(0) = data.at(last);
-   data.at(last) = Puzzle("0","0"); last--;
-
-   // Resort tree
-   int leftIndex, rightIndex, parentIndex = 0;
-   bool swapping = true;
-   while (swapping) {
-     swapping = false;
-     leftIndex = (parentIndex * 2) + 1;
-     rightIndex = (parentIndex * 2) + 2;
-
-     Puzzle temp = data.at(parentIndex);
-
-     // Check if left or right is bigger than parent
-     if (heapCompare(data.at(parentIndex), data.at(leftIndex)) || heapCompare(data.at(parentIndex), data.at(rightIndex))) {
-       swapping = true;
-       // right is bigger
-       if (heapCompare(data.at(leftIndex), data.at(rightIndex))) {
-         data.at(parentIndex) = data.at(rightIndex);
-         data.at(rightIndex) = temp;
-         parentIndex = rightIndex;
-       }
-       //  left is bigger
-       else {
-         data.at(parentIndex) = data.at(leftIndex);
-         data.at(leftIndex) = temp;
-         parentIndex = leftIndex;
-       }
-     }
-   }
-}
-
-bool Heap::isEmpty(){
-  if (last<0){
-    return true;
+//Function inserts a pointer to a Puzzle into a heap
+void Heap::insertIntoHeap(Puzzle *mData){
+  ++last;
+  if(last>max){
+    //set maximum size of heap;
+    max = last;
   }
+  data.push_back(mData);
+  if(last == 0){ return; } //first value added to the heap
+  int swappingIndex = last, parentIndex;
+  bool swapping = true;
+  while(swapping){
+    swapping = false;
+    if(swappingIndex%2 == 0){
+      parentIndex = (swappingIndex/2) - 1;
+    }else{
+      parentIndex = (swappingIndex / 2);
+    }
+    if(parentIndex>=0){
+      if(heapCompare(data[parentIndex], data[swappingIndex])){
+        swap(data[swappingIndex], data[parentIndex]);
+        swapping = true;
+        swappingIndex = parentIndex;
+
+      }
+    }
+  }
+}
+
+//Function deletes the smallest value in the heap
+void Heap::deleteRoot(){
+  if(last<0){ return; } //no value in the heap
+  Puzzle * deletedValue = data[0];
+  data[0] = data[last];
+  data.pop_back();
+  --last;
+  if(last<=0){return;}//a single value remains meaning no shuffeling is required
+  int parIndex = 0, leftIndex = 1, rightIndex = 2;
+  bool swapping = true;
+  while((heapCompare(data[parIndex], data[leftIndex]) || (heapCompare(data[parIndex], data[rightIndex]))) && swapping){
+    swapping = false;
+    if(heapCompare(data[rightIndex], data[leftIndex])){
+      swap(data[leftIndex], data[parIndex]);
+      parIndex = leftIndex;
+      swapping = true;
+    } else {
+      swap(data[rightIndex], data[parIndex]);
+      parIndex = rightIndex;
+      swapping = true;
+    }
+    leftIndex = parIndex*2+1;
+    rightIndex = parIndex*2+2;
+    if(leftIndex>last){ break; }
+    else{
+      if(rightIndex>last){
+        if(heapCompare(data[parIndex], data[leftIndex])){
+          swap(data[parIndex], data[leftIndex]);
+        }
+        break;
+      }
+    }
+  }
+  return;
+}
+
+void Heap::print(){
+  for(int i = 0; i< data.size();++i){
+    data[i]->customPrint();
+  }
+  return;
+}
+
+//Function returns true if the heap is empty
+bool Heap::isEmpty(){
+  if(last<0){ return true; }
   return false;
 }
 
- // Comapare two strings and return true if two should be higher in the tree than one
- // TODO: Dylan
- bool Heap::heapCompare(Puzzle one, Puzzle two) {
-   if (one.getFCost() < two.getFCost()) return true;
-   return false;
- }
+//Function returns true if the first Puzzle FCost is greater than or equal to the second Puzzle
+bool Heap::heapCompare(Puzzle* one, Puzzle* two){
+  if(one->getFCost() >= two->getFCost()) {return true;}
+  return false;
+}
 
- // TODO: Alex
- // Hash function
+//Function deletes a Puzzle from inside the heap.
+//This is done by deleting the value from the vector and then rebuilding the heap in its entirety
+void Heap::deleteValue(int index){
+  if(index == -1){
+    return;
+  }
+  vector<Puzzle*> newData = data;
+  newData.erase(newData.begin() + index);
+  data.clear();
+  last = -1;
+  for(int i = 0;i<newData.size();++i){
+    insertIntoHeap(newData[i]);
+  }
+  newData.clear();
+  return;
+
+
+}
+
+//Function returns front of the Heap
+Puzzle* Heap::getFront(){
+  if(last<0){return nullptr;}
+  return data[0];
+}
+
+//Function is passed a Puzzle. If that Puzzle exists with a lower FCost then the puzzle is deleted
+//This is done by deleting the value from the vector and then rebuilding the heap in its entirety
+//Returns true if a value has been deleted from the Heap otherwise returns False
+//**IMPORTANT NOTE**: Return value is not an idication of if the value has been added to the Heap only if a
+//value has been deleted off the heap
+bool Heap::replaceAndInsert(Puzzle *mPuzzle){
+  bool puzzle_deleted = false;
+  for(int i = 0;i<data.size();++i){
+    //If a puzzle with a lower Fcost is found then delete the value
+    if((data[i]->toString() == mPuzzle->toString()) &&  (mPuzzle->getFCost() < data[i]->getFCost()) ){
+      puzzle_deleted = true;
+      deleteValue(i);
+      break;
+    }
+  }
+  //Once a value is deleted OR no value is found then insert the new Puzzle
+  insertIntoHeap(mPuzzle);
+  return puzzle_deleted;
+}
+
+//======================================================================================================
+//                                              Hash Definitions
+//======================================================================================================
+
+//Hash constructor creates new items for the entire hash table
 Hash::Hash(){
 	for(int i = 0; i < tableSize; ++i) {
 		hashTable[i] = new item;
@@ -186,6 +242,10 @@ Hash::~Hash(){
   }
 }
 
+//Hash function uses the asci values of each character to create a key
+//Assuming string is an array named key the algorithm is:
+// value = (key[0]+key[1]+key[2])*(key[3]+key[4]+key[5])*(key[6]+key[7]+key[8])
+// value = value % tablesize
 int Hash::hashValue(string key){
 	int hash=1;
 	int num=0;
@@ -200,7 +260,14 @@ int Hash::hashValue(string key){
 	return hash;
 }
 
+//Function adds a value to hash table. If a value already exists in the table or cannot be added then the
+//function returns false
 bool Hash::addValue(string value, int cost){
+	if(cost==-1){
+		if(valueExists(value)){
+			return false;
+		}
+	}
   int index = hashValue(value);
 	if(hashTable[index]->value==""){
 		hashTable[index]->value = value;
@@ -233,6 +300,7 @@ bool Hash::addValue(string value, int cost){
   return true;
 }
 
+//Function returns true if a value exists in the hash
 bool Hash::valueExists(string value){
 	int index = hashValue(value);
 	item* current = hashTable[index];
@@ -245,6 +313,7 @@ bool Hash::valueExists(string value){
   return false;
 }
 
+//Function searches for the value input and deletes it from the hash
 bool Hash::deleteValue(string value, int cost){
 	int index = hashValue(value);
 
@@ -312,6 +381,8 @@ void Hash::print(){
   }
 }
 
+//Function getst the cost of an input string from the hash table
+//returns -1 if value is not found
 int Hash::getCost(string value){
   item *current;
   int index = hashValue(value);
@@ -353,16 +424,15 @@ void Hash::clear() {
 	  clock_t startTime;
     //add necessary variables here
     Queue Q;
+    maxQLength = 0;
+    int loop = 0;
+    Puzzle * temp = new Puzzle(initialState, goalState);
     //algorithm implementation
 	  cout << "------------------------------" << endl;
     cout << "<<breadthFirstSearch>>" << endl;
     cout << "------------------------------" << endl;
-
 	  startTime = clock();
-	  maxQLength = 0;
-    Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int loop = 1;
     while (!Q.isEmpty()) {
       loop++;
       temp = Q.leave();
@@ -384,14 +454,10 @@ void Hash::clear() {
         Q.addToBack(temp->moveLeft());
       }
       delete temp;
-      // DEBUG:
-      /*if (loop % 10000 == 0) {
-        cout << "state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << endl;
-      }*/
   }
 //***********************************************************************************************************
     if (temp->goalMatch()) { path = temp->getPath(); }
-    else { path = "DDRRLLLUUU"; }//this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     numOfStateExpansions = loop;
     maxQLength = Q.getMax();
@@ -411,16 +477,15 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
     //add necessary variables here
     Queue Q;
     Hash H;
+    maxQLength = 0;
+    int loop = 0;
+    Puzzle * temp = new Puzzle(initialState, goalState);
     //algorithm implementation
 	  cout << "------------------------------" << endl;
     cout << "<<breadthFirstSearch_with_VisitedList>>" << endl;
     cout << "------------------------------" << endl;
-
 	  startTime = clock();
-	  maxQLength = 1;
-    Puzzle * temp = new Puzzle(initialState, goalState);
     Q.addToBack(temp);
-    int loop = 1;
     while (!Q.isEmpty()) {
       loop++;
       temp = Q.leave();
@@ -430,39 +495,26 @@ string breadthFirstSearch_with_VisitedList(string const initialState, string con
 
       if (temp->canMoveUp() && temp->getPath()[temp->getPathLength() - 1] != 'D') {
         Puzzle *p = temp->moveUp();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveRight() && temp->getPath()[temp->getPathLength() - 1] != 'L') {
         Puzzle *p = temp->moveRight();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveDown() && temp->getPath()[temp->getPathLength() - 1] != 'U') {
         Puzzle *p = temp->moveDown();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       if (temp->canMoveLeft() && temp->getPath()[temp->getPathLength() - 1] != 'R') {
         Puzzle *p = temp->moveLeft();
-        if (H.addValue(p->getString())) {
-          Q.addToBack(p);
-        }
+        if (H.addValue(p->getString())) { Q.addToBack(p); }
       }
       delete temp;
-      // DEBUG:
-    /*  if (loop % 1000 == 0) {
-        cout << " state: " << loop << " current Q " << Q.getCount() << " maxQ: " << Q.getMax() << " visited: " << visited.size() << endl;
-      }
-      */
   }
 //***********************************************************************************************************
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
     if (temp->goalMatch()) { path = temp->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
     numOfStateExpansions = loop;
     maxQLength = Q.getMax();
 	  return path;
@@ -522,7 +574,7 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
     maxQLength = Q.getMax();
     numOfStateExpansions = loop;
     if (OP->goalMatch()) { path = OP->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  return path;
 }
 
@@ -596,7 +648,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
     maxQLength = Q.getMax();
     numOfStateExpansions = loop;
     if (OP->goalMatch()) { path = OP->getPath(); }
-    else { path = "DDRRLLLUUU"; } //this is just a dummy path for testing the function
+    else { path = ""; } // Return empty path as no solution
 	  return path;
 }
 
@@ -608,46 +660,101 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
     numOfDeletionsFromMiddleOfHeap = 0;
     numOfLocalLoopsAvoided = 0;
     numOfAttemptedNodeReExpansions = 0;
+    numOfStateExpansions = 0;
     cout << "------------------------------" << endl;
     cout << "<<aStar_ExpandedList>>" << endl;
     cout << "------------------------------" << endl;
-
 	  actualRunningTime = 0.0;
 	  startTime = clock();
 	  maxQLength = 0;
 //***********************************************************************************************************
-
     Heap H;
-    Puzzle *temp_puzzle = new Puzzle(initialState, goalState);
-    temp_puzzle->updateHCost(heuristic);
-    temp_puzzle->updateFCost();
-
-    H.insertIntoHeap(*temp_puzzle);
     Hash e_list;
-    int loop = 0;
+    Puzzle *OP = new Puzzle(initialState, goalState);
+    OP->updateHCost(heuristic);
+    OP->updateFCost();
+    //Add the opening value onto the heap
+    H.insertIntoHeap(OP);
 
+    //Loop until the heap is empty
     while(!H.isEmpty()){
+      //Get the smalest value in the heap
+      OP = H.getFront();
+      H.deleteRoot();
 
-      Puzzle newP = H.deleteFromHeap();
-      e_list.addValue(newP.strBoard);
+      ++numOfAttemptedNodeReExpansions;
+      //Try to add a state into the expanded list. If the value is successfully added then carry out the expansions
+      if(e_list.addValue(OP->toString())){
+        ++numOfStateExpansions;
 
+        //Time moves up
+        if(OP->canMoveUp() && OP->getPath()[OP->getPathLength() - 1] != 'D'){
+          Puzzle *temp = OP->moveUp();
+          if(temp->goalMatch()){
+            OP = temp;
+            break;
+          }
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+        }
 
-      if(temp_puzzle->canMoveUp() && temp_puzzle->getLastDirec() != 'D'){
+        //Tile moves right
+        if(OP->canMoveRight() && OP->getPath()[OP->getPathLength() - 1] != 'L'){
+          Puzzle *temp = OP->moveRight();
+          if(temp->goalMatch()){
+            OP = temp;
+            break;
+          }
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+        }
 
+        //Tile moves down
+        if(OP->canMoveDown() && OP->getPath()[OP->getPathLength() - 1] != 'U'){
+          Puzzle *temp = OP->moveDown();
+          if(temp->goalMatch()){
+            OP = temp;
+            break;
+          }
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+        }
+
+        //Tile moves left
+        if(OP->canMoveLeft() && OP->getPath()[OP->getPathLength() - 1] != 'R'){
+          Puzzle *temp = OP->moveLeft();
+          if(temp->goalMatch()){
+            OP = temp;
+            break;
+          }
+          temp->updateHCost(heuristic);
+          temp->updateFCost();
+          if(H.replaceAndInsert(temp)){
+            ++numOfDeletionsFromMiddleOfHeap;
+          }
+        }
+      } else{
+        ++numOfLocalLoopsAvoided;
       }
-      if(temp_puzzle->canMoveRight() && temp_puzzle->getLastDirec() != 'L'){
 
-      }
-      if(temp_puzzle->canMoveDown() && temp_puzzle->getLastDirec() != 'U'){
-
-      }
-      if(temp_puzzle->canMoveLeft() && temp_puzzle->getLastDirec() != 'R'){
-
-      }
-
+      delete OP;
     } //H is empty
 
+    maxQLength = H.getMax();
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-	  path = "DDRRLLLUUU"; //this is just a dummy path for testing the function
+    if (OP->goalMatch()) {
+      path = OP->getPath();
+    }else{
+      path = ""; // Return empty path as no solution
+    }
 	  return path;
 }
