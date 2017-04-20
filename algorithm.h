@@ -68,6 +68,7 @@ public:
 	bool deleteValue(string value, int cost = -1);
   void print();
   int getCost(string value);
+  void clear();
 };
 
 string hash(string toHash);

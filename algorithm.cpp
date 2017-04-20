@@ -210,23 +210,19 @@ bool Hash::addValue(string value, int cost){
 	item* current = hashTable[index];
   while (current->next != nullptr) {
     if (current->value == value) {
-      /*if (current->cost > cost) {
+      if (current->cost > cost) {
         current->cost = cost;
         return true;
-      } else if (current->cost == cost) {
-        return true;
-      }*/
+      }
 		  return false;
     }
     current = current->next;
   }
-  if (current->value == value){/*
+  if (current->value == value){
     if (current->cost > cost) {
       current->cost = cost;
       return true;
-    } else if (current->cost == cost){
-      return true;
-    }*/
+    }
     return false;
   }
 	item* newItem = new item;
@@ -329,23 +325,28 @@ int Hash::getCost(string value){
   return -1;
 }
 
+void Hash::clear() {
+  item *current, *temp;
+  for(int i = 0; i < tableSize; ++i) {
+    current = hashTable[i];
+    current->value = "";
+    current->cost = -1;
+    current->next = nullptr;
+    current = current->next;
+    while(current != nullptr){
+      temp = current;
+      current = current->next;
+      delete temp;
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 // Search Algorithm:  Breadth-First Search
 //
 // Move Generator:
 //
-/**
- * Steps:
- * 1. Initialise Q with search node (S) as only entry; set Visited = (S).​
- * 2. If Q is empty, fail.  Else, pick FIRST node N from Q.​
- * 3. If state (N) is a goal, return N (we’ve reached the goal).​
- * 4. (Otherwise) Remove N from Q.
- * 5. Find all the descendants of state (N) not in Visited and create all the one-step extensions of N to each descendant.
- * 6. Add the extended paths to END of Q; add children of state (N) to Visited.
- * 7. Go to Step 2
- * Up, Right, Down, then Left
- */
  ////////////////////////////////////////////////////////////////////////////////////////////
  string breadthFirstSearch(string const initialState, string const goalState, int &numOfStateExpansions, int& maxQLength, float &actualRunningTime) {
     string path;
@@ -489,13 +490,13 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (!Q.isEmpty() && depth < ultimateMaxDepth) {
+    while (!Q.isEmpty()) {
         loop++;
         OP = Q.leave();
         if (OP->goalMatch()) {
             break;
         }
-        //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << OP->getPath() << " data is " << OP->toString() << endl;
+        //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << " " << OP->getPath() << " data is " << OP->toString() << endl;
         if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
             Q.addToFront(OP->moveUp());
         }
@@ -508,12 +509,10 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
         if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
             Q.addToFront(OP->moveLeft());
         }
-        OP->updateDepth();
         delete OP;
         if (Q.isEmpty()) {
             depth++;
             Puzzle *OS = new Puzzle (initialState, goalState);
-            OS->setDepth(0);
             Q.addToFront(OS);
         }
     }
@@ -550,44 +549,47 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (!Q.isEmpty() && depth < ultimateMaxDepth) {
-        OP = Q.leave();
+    while (depth < ultimateMaxDepth) {
+        while (!Q.isEmpty()) {
+            OP = Q.leave();
+            if (OP->goalMatch()) {
+                break;
+            }
+            //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << " Path is " << OP->getPath() << " data is " << OP->toString() << endl;
+            if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
+                Puzzle *temp = OP->moveUp();
+                if (H.addValue(temp->toString(), temp->getDepth())) {
+                    Q.addToFront(temp);
+                }
+            }
+            if (OP->canMoveRight(depth) && OP->getPath()[OP->getPathLength() - 1] != 'L') {
+                Puzzle *temp = OP->moveRight();
+                if (H.addValue(temp->toString(), temp->getDepth())) {
+                    Q.addToFront(temp);
+                }
+            }
+            if (OP->canMoveDown(depth) && OP->getPath()[OP->getPathLength() - 1] != 'U') {
+                Puzzle *temp = OP->moveDown();
+                if (H.addValue(temp->toString(), temp->getDepth())) {
+                    Q.addToFront(temp);
+                }
+            }
+            if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
+                Puzzle *temp = OP->moveLeft();
+                if (H.addValue(temp->toString(), temp->getDepth())) {
+                    Q.addToFront(temp);
+                }
+            }
+            delete OP;
+            loop++;
+        }
         if (OP->goalMatch()) {
             break;
         }
-        //cout << "OP depth is " << OP->getDepth() << " general depth is " << depth << OP->getPath() << " data is " << OP->toString() << endl;
-        if (OP->canMoveUp(depth) && OP->getPath()[OP->getPathLength() - 1] != 'D') {
-            Puzzle *temp = OP->moveUp();
-            if (H.addValue(temp->toString(), temp->getDepth())) {
-                Q.addToFront(temp);
-            }
-        }
-        if (OP->canMoveRight(depth) && OP->getPath()[OP->getPathLength() - 1] != 'L') {
-            Puzzle *temp = OP->moveRight();
-            if (H.addValue(temp->toString(), temp->getDepth())) {
-                Q.addToFront(temp);
-            }
-        }
-        if (OP->canMoveDown(depth) && OP->getPath()[OP->getPathLength() - 1] != 'U') {
-            Puzzle *temp = OP->moveDown();
-            if (H.addValue(temp->toString(), temp->getDepth())) {
-                Q.addToFront(temp);
-            }
-        }
-        if (OP->canMoveLeft(depth) && OP->getPath()[OP->getPathLength() - 1] != 'R') {
-            Puzzle *temp = OP->moveLeft();
-            if (H.addValue(temp->toString(), temp->getDepth())) {
-                Q.addToFront(temp);
-            }
-        }
-        delete OP;
-        loop++;
-        if (Q.isEmpty()) {
-            depth++;
-            Puzzle *OS = new Puzzle (initialState, goalState);
-            OS->setDepth(0);
-            Q.addToFront(OS);
-        }
+        H.clear();
+        depth++;
+        Puzzle *OS = new Puzzle (initialState, goalState);
+        Q.addToFront(OS);
     }
 //***********************************************************************************************************
     actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
