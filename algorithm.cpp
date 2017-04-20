@@ -242,22 +242,19 @@ Hash::~Hash(){
   }
 }
 
-//Hash function uses the asci values of each character to create a key
+//Hash function uses the sbdm Hash function to create a key
 //Assuming string is an array named key the algorithm is:
-// value = (key[0]+key[1]+key[2])*(key[3]+key[4]+key[5])*(key[6]+key[7]+key[8])
+// value = (int)key[i] + (hash << 6) + (hash << 16) - hash
 // value = value % tablesize
 int Hash::hashValue(string key){
-	int hash=1;
-	int num=0;
-	for(int i = 0; i < 3; ++i){
-		for(int j = 0; j < 3; ++j){
-			num+=(int)key[((i+1)*(j+1))-1];
-		}
-		hash*= num;
-		num = 0;
-	}
-	hash%=tableSize;
-	return hash;
+  int len = key.length();
+  uint32_t hash = 0;
+  for(int i = 0;i<len;++i){
+    hash = (int)key[i] + (hash << 6) + (hash << 16) - hash; //sbdm Hash function 
+  }
+  hash %= tableSize;
+  return hash;
+
 }
 
 //Function adds a value to hash table. If a value already exists in the table or cannot be added then the
@@ -751,10 +748,9 @@ string aStar_ExpandedList(string const initialState, string const goalState, int
 
     maxQLength = H.getMax();
 	  actualRunningTime = ((float)(clock() - startTime)/CLOCKS_PER_SEC);
-    if (OP->goalMatch()) {
-      path = OP->getPath();
-    }else{
-      path = ""; // Return empty path as no solution
-    }
-	  return path;
+	 if(H.isEmpty()){
+		 return "";
+	 }
+	 path = OP->getPath();
+	 return path;
 }

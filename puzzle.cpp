@@ -99,13 +99,9 @@ int Puzzle::h(heuristicFunction hFunction) {
 	int sum=0;
 	int h=0;
 	int numOfMisplacedTiles=0;
-<<<<<<< HEAD
 
 	switch(hFunction) {
-=======
-	
-	switch(hFunction) { 
->>>>>>> origin/master
+
 		case misplacedTiles:
 						//place your implementation here
 			//Loop through board and compare with goal board for number of misplaced tiles
