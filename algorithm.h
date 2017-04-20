@@ -12,7 +12,7 @@
 #include "puzzle.h"
 
 struct Node {
-  Node(Puzzle *&mData) : data(mData), next(NULL), prev(NULL) {}
+  Node(Puzzle *&mData) : data(mData), next(nullptr), prev(nullptr) {}
   Puzzle *data;
   Node *next, *prev;
 };
@@ -41,6 +41,8 @@ private:
   vector<Puzzle*> data;
   int last, max;
   void deleteValue(int index);
+  void fixHeapDown(int index);
+  void fixHeapUp(int index);
 public:
   Heap();
   ~Heap(){ data.clear(); };

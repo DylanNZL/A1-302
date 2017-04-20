@@ -12,10 +12,17 @@ using namespace std;
 //======================================================================================================
 Queue::Queue() {
   count = 0;  max = 0;
-  front = NULL; rear = NULL;
+  front = nullptr; rear = nullptr;
 }
 
 Queue::~Queue() {
+  Node *current;
+  while(front!=nullptr){
+    current = front;
+    front = front->next;
+    delete current;
+  }
+
 }
 
 // Used for PDS
@@ -24,8 +31,8 @@ void Queue::addToFront(Puzzle *data) {
   // If the current size of Q is bigger than the max size, increment max
   if (count > max) { max++; }
   Node *temp = new Node(data);
-  if (rear == NULL) { rear = temp; }
-  if (front != NULL) {
+  if (rear == nullptr) { rear = temp; }
+  if (front != nullptr) {
     temp->next = front;
     front->prev = temp;
   }
@@ -38,8 +45,8 @@ void Queue::addToBack(Puzzle *data) {
   // If the current size of Q is bigger than the max size, increment max
   if (count > max) { max++; }
   Node *temp = new Node(data);
-  if (front == NULL) { front = temp; }
-  if (rear != NULL) {
+  if (front == nullptr) { front = temp; }
+  if (rear != nullptr) {
     rear->next = temp;
     temp->prev = rear;
   }
@@ -53,7 +60,7 @@ Puzzle * Queue::leave() {
   Node * temp;
   temp = front;
   front = front->next;
-  if (front == NULL) { rear = NULL; }
+  if (front == nullptr) { rear = nullptr; }
 
   Puzzle *deleted = temp->data;
   delete temp;
@@ -62,7 +69,7 @@ Puzzle * Queue::leave() {
 }
 
 bool Queue::isEmpty() {
-  if (front == NULL) {
+  if (front == nullptr) {
     return true;
   }
   return false;
@@ -174,6 +181,7 @@ bool Heap::heapCompare(Puzzle* one, Puzzle* two){
 //Function deletes a Puzzle from inside the heap.
 //This is done by deleting the value from the vector and then rebuilding the heap in its entirety
 void Heap::deleteValue(int index){
+
   if(index == -1){
     return;
   }
@@ -186,9 +194,52 @@ void Heap::deleteValue(int index){
   }
   newData.clear();
   return;
-
-
 }
+
+void Heap::fixHeapUp(int index){
+  
+  while(index!=1){
+    int parent = index/2;
+    if(data[index]->getFCost() <= data[parent]->getFCost()){
+      swap(data[index], data[parent]);
+      index = parent;
+    } else {
+      break;
+    }
+
+  }
+}
+
+void Heap::fixHeapDown(int index){
+
+  while(2*index <= last){//continue while this node has at least one child
+    int child1 = 2*index;
+    int child2 = child1 + 1;
+
+    if(child2 <= last){//2Valid child nodes
+
+      if((data[index]->getFCost() <= data[child1]->getFCost()) && (data[index]->getFCost() <= data[child2]->getFCost())) {//value is in the correct place
+        break; 
+      } else {
+        if(data[child1]<data[child2]){
+          swap(data[index], data[child1]);
+          index = child1;
+        }else{
+          swap(data[index], data[child2]);
+          index = child2;
+        }
+      }
+    } else {
+      if(data[index] <= data[child1]){
+        break;
+      } else{
+        swap(data[index], data[child1]);
+        index = child1;
+      }
+    }
+  }
+}
+
 
 //Function returns front of the Heap
 Puzzle* Heap::getFront(){
