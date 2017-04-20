@@ -179,28 +179,27 @@ bool Heap::heapCompare(Puzzle* one, Puzzle* two){
 }
 
 //Function deletes a Puzzle from inside the heap.
-//This is done by deleting the value from the vector and then rebuilding the heap in its entirety
+//This is done by deleting the selected value, putting the end value in its place and resorting the heap
 void Heap::deleteValue(int index){
-
   if(index == -1){
     return;
   }
-  vector<Puzzle*> newData = data;
-  newData.erase(newData.begin() + index);
-  data.clear();
-  last = -1;
-  for(int i = 0;i<newData.size();++i){
-    insertIntoHeap(newData[i]);
+  data[index] = data[last];
+  data.erase(data.end()-1);
+  --last;
+  if(index == 0 || data[index/2] < data[index]){
+    fixHeapDown(index);
+  }else{
+    fixHeapUp(index);
   }
-  newData.clear();
-  return;
+
 }
 
+//Move "Up" the heap and fix iton the way
 void Heap::fixHeapUp(int index){
-  
   while(index!=1){
     int parent = index/2;
-    if(data[index]->getFCost() <= data[parent]->getFCost()){
+    if(data[index]->getFCost() < data[parent]->getFCost()){
       swap(data[index], data[parent]);
       index = parent;
     } else {
@@ -210,6 +209,7 @@ void Heap::fixHeapUp(int index){
   }
 }
 
+//Move "Down" the heap and fix it on the way
 void Heap::fixHeapDown(int index){
 
   while(2*index <= last){//continue while this node has at least one child
@@ -221,7 +221,7 @@ void Heap::fixHeapDown(int index){
       if((data[index]->getFCost() <= data[child1]->getFCost()) && (data[index]->getFCost() <= data[child2]->getFCost())) {//value is in the correct place
         break; 
       } else {
-        if(data[child1]<data[child2]){
+        if(data[child1]->getFCost() <= data[child2]->getFCost()){
           swap(data[index], data[child1]);
           index = child1;
         }else{
@@ -230,7 +230,7 @@ void Heap::fixHeapDown(int index){
         }
       }
     } else {
-      if(data[index] <= data[child1]){
+      if(data[index]->getFCost() <= data[child1]->getFCost()){
         break;
       } else{
         swap(data[index], data[child1]);
