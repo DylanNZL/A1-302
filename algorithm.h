@@ -68,7 +68,6 @@ private:
 public:
   Hash();
   ~Hash();
-  //bool addValue (string value);
 	bool addValue (string value, int cost = -1);
   bool valueExists(string value);
 	bool deleteValue(string value, int cost = -1);
