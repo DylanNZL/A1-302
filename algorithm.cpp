@@ -159,12 +159,6 @@ void Heap::deleteRoot(){
   return;
 }
 
-void Heap::print(){
-  for(int i = 0; i< data.size();++i){
-    data[i]->customPrint();
-  }
-  return;
-}
 
 //Function returns true if the heap is empty
 bool Heap::isEmpty(){
@@ -308,43 +302,35 @@ int Hash::hashValue(string key){
 
 }
 
-//Function adds a value to hash table. If a value already exists in the table or cannot be added then the
-//function returns false
+//Addvalue function is passed a string and adds it to the heap
+//Function returns true if a value is added  to the hash else it returns false
+//cost set to -1 by default
 bool Hash::addValue(string value, int cost){
-	if(cost==-1){
-		if(valueExists(value)){
-			return false;
-		}
-	}
   int index = hashValue(value);
-	if(hashTable[index]->value==""){
-		hashTable[index]->value = value;
+  if(hashTable[index]->value == ""){
+    hashTable[index]->value = value;
     hashTable[index]->cost = cost;
-		return true;
-	}
-	item* current = hashTable[index];
-  while (current->next != nullptr) {
-    if (current->value == value) {
-      if (current->cost > cost) {
+    return true;
+  }
+  item *current = hashTable[index], *prev = nullptr;
+  while(current!=nullptr){
+    if(current->value == value){
+      //If cost does not equal -1 then the cost of travel may need to be replaced
+      //Check if the new cost is better than the previous cost
+      if(cost != -1 && current->cost > cost){ 
         current->cost = cost;
         return true;
       }
-		  return false;
+      return false;
     }
+    prev = current;
     current = current->next;
   }
-  if (current->value == value){
-    if (current->cost > cost) {
-      current->cost = cost;
-      return true;
-    }
-    return false;
-  }
-	item* newItem = new item;
-	current->next = newItem;
-	newItem->value = value;
-  newItem->cost = cost;
-	newItem->next = nullptr;
+  current = new item;
+  current->value = value;
+  current->cost = cost;
+  current->next = nullptr;
+  prev->next = current;
   return true;
 }
 
@@ -393,40 +379,6 @@ bool Hash::deleteValue(string value, int cost){
 		current = current->next;
 	}
   return false;
-}
-
-//Print function will print each value in the Hash Table
-void Hash::print(){
-  item* current;
-  int temp = 0;
-  for(int i = 0; i < tableSize; ++i) {
-
-    if(hashTable[i]->value != "") {
-      temp = 0;
-      cout<<"==================="<<endl;
-      cout<<"Index: "<<i<<":"<<endl;
-      cout<<"Node "<<temp<<endl;
-      cout<<hashTable[i]->value<<endl;
-      if(hashTable[i]->cost!=-1){
-        cout<<"Cost: "<<hashTable[i]->cost<<endl;
-      }
-      cout<<"==================="<<endl;
-      current = hashTable[i]->next;
-
-      while(current!=nullptr){
-        ++temp;
-        cout<<"==================="<<endl;
-        cout<<"Index: "<<i<<":"<<endl;
-        cout<<"Node "<<temp<<endl;
-        cout<<current->value<<endl;
-        if(current->cost!=-1){
-          cout<<"Cost: "<<current->cost<<endl;
-        }
-        cout<<"==================="<<endl;
-        current = current->next;
-      }
-    }
-  }
 }
 
 //Function getst the cost of an input string from the hash table

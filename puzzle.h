@@ -50,5 +50,4 @@ public:
 		int getHCost();
 		int getGCost();
         char getLastDirec();
-    void customPrint();
 };

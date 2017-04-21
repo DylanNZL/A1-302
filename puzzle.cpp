@@ -23,10 +23,6 @@ Puzzle::Puzzle(const Puzzle &p) : path(p.path) {
 	depth = p.depth;
 }
 
-void Puzzle::customPrint(){
-	cout<<"G Cost: "<<getGCost()<<" H Cost: "<<getHCost()<<" FCost: "<<getFCost()<<" - "<<getString()<<endl;
-}
-
 //////////////////////////////////////////////////////////////
 //constructor
 //inputs:  initial state, goal state

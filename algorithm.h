@@ -50,7 +50,6 @@ public:
   bool isEmpty();
   bool heapCompare(Puzzle* one, Puzzle* two);
   void deleteRoot();
-  void print();
   Puzzle* getFront();
   int getMax() { return max; }
   bool replaceAndInsert(Puzzle *mPuzzle);
@@ -69,10 +68,10 @@ private:
 public:
   Hash();
   ~Hash();
+  //bool addValue (string value);
 	bool addValue (string value, int cost = -1);
   bool valueExists(string value);
 	bool deleteValue(string value, int cost = -1);
-  void print();
   int getCost(string value);
   void clear();
 };
