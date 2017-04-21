@@ -181,7 +181,7 @@ void Heap::deleteValue(int index){
   data[index] = data[last];
   data.erase(data.end()-1);
   --last;
-  if(index == 0 || data[index/2] < data[index]){
+  if(index == 0 || data[index/2]->getFCost() < data[index]->getFCost()){
     fixHeapDown(index);
   }else{
     fixHeapUp(index);
