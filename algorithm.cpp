@@ -213,7 +213,7 @@ void Heap::fixHeapDown(int index){
     if(child2 <= last){//2Valid child nodes
 
       if((data[index]->getFCost() <= data[child1]->getFCost()) && (data[index]->getFCost() <= data[child2]->getFCost())) {//value is in the correct place
-        break; 
+        break;
       } else {
         if(data[child1]->getFCost() <= data[child2]->getFCost()){
           swap(data[index], data[child1]);
@@ -295,7 +295,7 @@ int Hash::hashValue(string key){
   int len = key.length();
   uint32_t hash = 0;
   for(int i = 0;i<len;++i){
-    hash = (int)key[i] + (hash << 6) + (hash << 16) - hash; //sbdm Hash function 
+    hash = (int)key[i] + (hash << 6) + (hash << 16) - hash; //sbdm Hash function
   }
   hash %= tableSize;
   return hash;
@@ -317,7 +317,7 @@ bool Hash::addValue(string value, int cost){
     if(current->value == value){
       //If cost does not equal -1 then the cost of travel may need to be replaced
       //Check if the new cost is better than the previous cost
-      if(cost != -1 && current->cost > cost){ 
+      if(cost != -1 && current->cost > cost){
         current->cost = cost;
         return true;
       }
@@ -542,7 +542,7 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (!Q.isEmpty()) {
+    while (!Q.isEmpty() && depth <= 25) {
         loop++;
         OP = Q.leave();
         if (OP->goalMatch()) {
@@ -601,7 +601,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (depth < ultimateMaxDepth) {
+    while (depth <= 25) {
         while (!Q.isEmpty()) {
             OP = Q.leave();
             if (OP->goalMatch()) {
@@ -640,6 +640,7 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
         }
         H.clear();
         depth++;
+        cout << depth << endl;
         Puzzle *OS = new Puzzle (initialState, goalState);
         Q.addToFront(OS);
     }
