@@ -640,7 +640,6 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
         }
         H.clear();
         depth++;
-        cout << depth << endl;
         Puzzle *OS = new Puzzle (initialState, goalState);
         Q.addToFront(OS);
     }
