@@ -542,7 +542,8 @@ string progressiveDeepeningSearch_No_VisitedList(string const initialState, stri
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (!Q.isEmpty() && depth <= 25) {
+    // Of the current tests the highest depth it has to go to is 30 (test 4)
+    while (!Q.isEmpty() && depth <= 31) {
         loop++;
         OP = Q.leave();
         if (OP->goalMatch()) {
@@ -601,7 +602,8 @@ string progressiveDeepeningSearch_with_NonStrict_VisitedList(string const initia
 
     Puzzle *OP = new Puzzle (initialState, goalState);
     Q.addToFront(OP);
-    while (depth <= 25) {
+    // Of the current tests the highest depth it has to go to is 30 (test 4)
+    while (depth <= 31) {
         while (!Q.isEmpty()) {
             OP = Q.leave();
             if (OP->goalMatch()) {
